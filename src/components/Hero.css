@@ -66,6 +66,36 @@
   max-width: 18ch;
 }
 
+/* Primera línea: las palabras entran en cascada con un tinte leve
+   blanco → azul hielo (el mismo de los stats) */
+.hero__word {
+  display: inline-block;
+  background: linear-gradient(120deg, var(--text) 55%, #9fc3ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  transform: translateY(0.55em);
+  animation: hero-word-in 0.7s var(--ease-out) forwards;
+  animation-delay: calc(var(--w, 0) * 110ms);
+}
+
+@keyframes hero-word-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Línea decodificada: mientras "descifra" emite un glow cian tenue */
+.hero__decode {
+  display: inline-block;
+}
+
+.hero__decode.is-decoding {
+  text-shadow: 0 0 22px rgba(34, 211, 238, 0.35);
+}
+
 .hero__subtitle {
   color: var(--text-muted);
   font-size: clamp(1.05rem, 1.6vw, 1.25rem);

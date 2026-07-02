@@ -1,20 +1,26 @@
 .globe {
   position: fixed;
   top: 50%;
-  left: clamp(-14rem, -12vw, -6rem);
+  left: clamp(-20rem, -16vw, -9rem);
   transform: translateY(-50%);
-  width: min(42rem, 44vw);
+  width: min(56rem, 58vw);
   aspect-ratio: 1;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.55;
+  opacity: 0.6;
+  /* Halo: gradiente en el contenedor en vez de drop-shadow sobre el SVG,
+     que obligaba a rasterizar el filtro en cada frame de rotación */
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(61, 139, 255, 0.09),
+    transparent 62%
+  );
 }
 
 .globe__svg {
   width: 100%;
   height: 100%;
   display: block;
-  filter: drop-shadow(0 0 40px rgba(61, 139, 255, 0.12));
 }
 
 .globe__sphere {

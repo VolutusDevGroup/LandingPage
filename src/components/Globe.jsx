@@ -21,6 +21,14 @@ const CITIES = [
 
 const rad = (deg) => (deg * Math.PI) / 180
 
+// Física de la rotación: el scroll no fija el ángulo, inyecta impulso angular.
+// Un flick rápido deja al globo girando varios segundos hasta que la fricción
+// exponencial lo frena; en reposo el bucle rAF se apaga solo (cero CPU).
+const IMPULSE = 0.000012 // rad/ms de velocidad angular por px de scroll
+const OMEGA_MAX = 0.004 // rad/ms (~0.23 rad/frame a 60fps como tope)
+const FRICTION = 0.9986 // factor por ms → un flick fuerte gira ~4-6 s
+const OMEGA_MIN = 0.000004 // bajo esto se considera detenido
+
 export default function Globe() {
   const meridiansRef = useRef(null)
   const citiesRef = useRef(null)
@@ -30,12 +38,14 @@ export default function Globe() {
 
     const meridians = meridiansRef.current.querySelectorAll('ellipse')
     const cities = citiesRef.current.querySelectorAll('circle')
+
+    let phi = window.scrollY * 0.0022 // arranca donde habría quedado antes
+    let omega = 0
+    let lastY = window.scrollY
+    let lastT = 0
     let raf = null
 
     const render = () => {
-      raf = null
-      const phi = window.scrollY * 0.0022 // radianes por px de scroll
-
       meridians.forEach((el, i) => {
         const a = (i * Math.PI) / MERIDIANS + phi
         el.setAttribute('rx', Math.max(Math.abs(Math.sin(a)) * R, 0.5).toFixed(1))
@@ -51,8 +61,29 @@ export default function Globe() {
       })
     }
 
+    const tick = (now) => {
+      const dt = lastT ? Math.min(now - lastT, 64) : 16
+      lastT = now
+
+      phi += omega * dt
+      omega *= FRICTION ** dt
+
+      render()
+
+      if (Math.abs(omega) > OMEGA_MIN) {
+        raf = requestAnimationFrame(tick)
+      } else {
+        omega = 0
+        raf = null
+        lastT = 0
+      }
+    }
+
     const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(render)
+      const delta = window.scrollY - lastY
+      lastY = window.scrollY
+      omega = Math.max(-OMEGA_MAX, Math.min(OMEGA_MAX, omega + delta * IMPULSE))
+      if (!raf) raf = requestAnimationFrame(tick)
     }
 
     render()
