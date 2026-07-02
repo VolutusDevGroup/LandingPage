@@ -1,15 +1,16 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { geoOrthographic, geoPath, geoGraticule } from 'd3-geo'
+import * as topojson from 'topojson-client'
+// Importamos directamente el mapa de baja resolución (110m) para mejor rendimiento
+import topology from 'world-atlas/countries-110m.json' 
+import './Globe.css'
 import './Globe.css'
 
-// Globo terráqueo wireframe en proyección ortográfica, sin librerías 3D:
-// los meridianos son elipses cuyo radio horizontal es R·|sin(longitud)|,
-// así que basta reescribir `rx` según el scroll para simular la rotación.
 const R = 270
 const MERIDIANS = 12 // separados 15°
 const LATITUDES = [-60, -30, 0, 30, 60]
 const TILT = -16 // inclinación del eje, como la Tierra
 
-// "Ciudades": nodos que orbitan con la rotación y se ocultan al pasar atrás
 const CITIES = [
   { lat: -33, lon: -71 }, // Santiago
   { lat: 40, lon: -74 }, // Nueva York
@@ -21,13 +22,11 @@ const CITIES = [
 
 const rad = (deg) => (deg * Math.PI) / 180
 
-// Física de la rotación: el scroll no fija el ángulo, inyecta impulso angular.
-// Un flick rápido deja al globo girando varios segundos hasta que la fricción
-// exponencial lo frena; en reposo el bucle rAF se apaga solo (cero CPU).
-const IMPULSE = 0.000012 // rad/ms de velocidad angular por px de scroll
-const OMEGA_MAX = 0.004 // rad/ms (~0.23 rad/frame a 60fps como tope)
-const FRICTION = 0.9986 // factor por ms → un flick fuerte gira ~4-6 s
-const OMEGA_MIN = 0.000004 // bajo esto se considera detenido
+// --- NUEVA FÍSICA ---
+const BASE_OMEGA = 0.0002 // Velocidad de rotación constante (auto-rotación)
+const IMPULSE = 0.000006 // Reducido: el scroll inyecta menos velocidad inicial
+const OMEGA_MAX = 0.003 // Tope máximo de velocidad
+const FRICTION = 0.992 // Fricción ajustada para que vuelva más rápido a la velocidad normal
 
 export default function Globe() {
   const meridiansRef = useRef(null)
@@ -39,8 +38,8 @@ export default function Globe() {
     const meridians = meridiansRef.current.querySelectorAll('ellipse')
     const cities = citiesRef.current.querySelectorAll('circle')
 
-    let phi = window.scrollY * 0.0022 // arranca donde habría quedado antes
-    let omega = 0
+    let phi = window.scrollY * 0.0022
+    let omega = BASE_OMEGA // Arranca con la velocidad base, no en 0
     let lastY = window.scrollY
     let lastT = 0
     let raf = null
@@ -66,28 +65,28 @@ export default function Globe() {
       lastT = now
 
       phi += omega * dt
-      omega *= FRICTION ** dt
+
+      // La fricción ahora actúa sobre el "exceso" o "déficit" de velocidad.
+      // Si haces scroll rápido, omega sube. Esta fórmula lo reduce suavemente
+      // hasta que vuelva a ser exactamente igual a BASE_OMEGA.
+      const excess = omega - BASE_OMEGA
+      omega = BASE_OMEGA + excess * (FRICTION ** dt)
 
       render()
-
-      if (Math.abs(omega) > OMEGA_MIN) {
-        raf = requestAnimationFrame(tick)
-      } else {
-        omega = 0
-        raf = null
-        lastT = 0
-      }
+      raf = requestAnimationFrame(tick) // El bucle ya no se detiene nunca
     }
 
     const onScroll = () => {
       const delta = window.scrollY - lastY
       lastY = window.scrollY
+      // Inyectamos el impulso sumándolo a la velocidad actual
       omega = Math.max(-OMEGA_MAX, Math.min(OMEGA_MAX, omega + delta * IMPULSE))
-      if (!raf) raf = requestAnimationFrame(tick)
     }
 
-    render()
+    // Iniciamos el renderizado infinito
+    raf = requestAnimationFrame(tick)
     window.addEventListener('scroll', onScroll, { passive: true })
+    
     return () => {
       window.removeEventListener('scroll', onScroll)
       if (raf) cancelAnimationFrame(raf)
@@ -115,6 +114,8 @@ export default function Globe() {
                 cy={-R * Math.sin(rad(lat))}
                 rx={R * Math.cos(rad(lat))}
                 ry={R * Math.cos(rad(lat)) * 0.16}
+                fill="none"
+                stroke="rgba(255,255,255,0.2)"
               />
             ))}
           </g>
@@ -125,6 +126,8 @@ export default function Globe() {
                 key={i}
                 rx={Math.max(Math.abs(Math.sin((i * Math.PI) / MERIDIANS)) * R, 0.5)}
                 ry={R}
+                fill="none"
+                stroke="rgba(255,255,255,0.2)"
               />
             ))}
           </g>
@@ -136,6 +139,7 @@ export default function Globe() {
                 r="4"
                 cx={R * Math.cos(rad(lat)) * Math.sin(rad(lon))}
                 cy={-R * Math.sin(rad(lat))}
+                fill="#fff"
               />
             ))}
           </g>

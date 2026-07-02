@@ -1,59 +1,82 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
-// Efecto "decodificación": el texto pasa por glifos aleatorios que se
-// asientan de izquierda a derecha hasta formar el texto final.
-// El elemento debe llevar aria-hidden y convivir con una copia .sr-only,
-// para que los lectores de pantalla nunca oigan los glifos intermedios.
 const GLYPHS = '!<>-_\\/[]{}=+*^?#01'
+const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3)
 
-export default function useDecode(text, { duration = 1200 } = {}) {
+export default function useDecode(text, { duration = 2500, dotDelay = 600 } = {}) {
   const ref = useRef(null)
   const rafRef = useRef(null)
+  const timeoutRef = useRef(null)
 
-  const play = useCallback(() => {
+  useEffect(() => {
     const el = ref.current
-    if (!el || el.classList.contains('is-decoding')) return
+    if (!el) return // Si no hay elemento asignado al ref, no hacemos nada
+
+    const targetText = text + '.'
+
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      el.textContent = text
+      el.textContent = targetText
       return
     }
 
-    // Fija el ancho final para que los glifos no muevan el layout (CLS 0)
-    el.textContent = text
-    el.style.width = `${el.offsetWidth}px`
+    // Configuración inicial de estilos
+    el.style.display = 'inline-block'
+    el.style.whiteSpace = 'nowrap'
+    
+    // Fijamos el ancho evaluando el texto CON el punto final
+    el.textContent = targetText
+    el.style.minWidth = `${el.offsetWidth}px`
     el.classList.add('is-decoding')
 
     const start = performance.now()
+    
     const step = (now) => {
       const p = Math.min((now - start) / duration, 1)
-      const settled = Math.floor(p * text.length)
+      const easeProgress = easeOutCubic(p)
+      const settled = Math.floor(easeProgress * text.length)
+      
       let out = text.slice(0, settled)
+      
       for (let i = settled; i < text.length; i++) {
-        out += text[i] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0]
+        out += text[i] === ' ' 
+          ? ' ' 
+          : GLYPHS[Math.floor(Math.random() * GLYPHS.length)]
       }
+      
       el.textContent = out
+
       if (p < 1) {
         rafRef.current = requestAnimationFrame(step)
       } else {
-        el.style.width = ''
-        el.classList.remove('is-decoding')
+        timeoutRef.current = setTimeout(() => {
+          if (el) {
+            el.textContent = targetText
+            el.style.minWidth = ''
+            el.style.whiteSpace = ''
+            el.style.display = ''
+            el.classList.remove('is-decoding')
+          }
+        }, dotDelay)
       }
     }
+    
     rafRef.current = requestAnimationFrame(step)
-  }, [text, duration])
 
-  useEffect(() => {
-    play()
+    // Función de limpieza (vital para que funcione en React 18 Strict Mode)
     return () => {
-      cancelAnimationFrame(rafRef.current)
-      const el = ref.current
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      
+      // Si el componente se desmonta inesperadamente, forzamos el texto final
       if (el) {
-        el.textContent = text
-        el.style.width = ''
+        el.textContent = targetText
+        el.style.minWidth = ''
+        el.style.whiteSpace = ''
+        el.style.display = ''
         el.classList.remove('is-decoding')
       }
     }
-  }, [play, text])
+  }, [text, duration, dotDelay])
 
-  return { ref, play }
+  return { ref }
 }
