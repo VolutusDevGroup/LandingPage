@@ -1,0 +1,27 @@
+.about__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.about__card-title {
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.about__card-title::before {
+  content: '';
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px var(--glow);
+}
+
+.about__card-text {
+  color: var(--text-muted);
+  margin: 0;
+}

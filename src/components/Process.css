@@ -1,0 +1,112 @@
+.process__timeline {
+  position: relative;
+  list-style: none;
+  margin: 2.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 2.25rem;
+}
+
+/* Línea vertical del timeline */
+.process__timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.55rem;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    var(--accent),
+    rgba(148, 178, 214, 0.15) 30%,
+    rgba(148, 178, 214, 0.15) 70%,
+    var(--accent-2)
+  );
+}
+
+.process__step {
+  position: relative;
+  padding-left: 2.75rem;
+  max-width: 44rem;
+}
+
+.process__node {
+  position: absolute;
+  left: 0;
+  top: 0.4rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  border: 1px solid rgba(61, 139, 255, 0.6);
+  background: var(--bg);
+  box-shadow: 0 0 0 3px rgba(61, 139, 255, 0.12);
+}
+
+.process__node::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 8px var(--glow);
+}
+
+.process__num {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent-2);
+  letter-spacing: 0.1em;
+}
+
+.process__title {
+  font-size: 1.2rem;
+  margin: 0.15em 0 0.35em;
+}
+
+.process__text {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+@media (min-width: 860px) {
+  .process__timeline {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.75rem 4rem;
+  }
+
+  .process__timeline::before {
+    left: calc(50% - 0.5px);
+  }
+
+  .process__step {
+    padding-left: 0;
+    padding-right: 3.25rem;
+    text-align: right;
+    justify-self: end;
+  }
+
+  .process__step .process__node {
+    left: auto;
+    right: -0.575rem;
+  }
+
+  /* Pasos pares al lado derecho de la línea */
+  .process__step:nth-child(even) {
+    grid-column: 2;
+    padding-right: 0;
+    padding-left: 3.25rem;
+    text-align: left;
+    justify-self: start;
+    /* margin (no transform) para no chocar con la transición de .reveal__item */
+    margin-top: 3.5rem;
+  }
+
+  .process__step:nth-child(even) .process__node {
+    right: auto;
+    left: -0.575rem;
+  }
+
+  .process__step:nth-child(odd) {
+    grid-column: 1;
+  }
+}

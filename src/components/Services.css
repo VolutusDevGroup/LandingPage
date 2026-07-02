@@ -1,0 +1,46 @@
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.services__card {
+  padding: 1.5rem;
+}
+
+.services__icon {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: rgba(61, 139, 255, 0.08);
+  color: var(--accent-2);
+  transition:
+    box-shadow 0.35s ease,
+    color 0.35s ease;
+}
+
+.services__card:hover .services__icon {
+  color: #7cc8ff;
+  box-shadow: 0 0 18px -4px var(--glow);
+}
+
+.services__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.services__title {
+  font-size: 1.1rem;
+  margin-bottom: 0.4em;
+}
+
+.services__text {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
