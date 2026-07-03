@@ -94,7 +94,7 @@ export default function Services() {
       aria-labelledby="servicios-titulo"
     >
       <div className="container">
-        <div className="panel panel--left reveal reveal--left" ref={ref}>
+        <div className="panel panel--right reveal reveal--right" ref={ref}>
         <p className="section__kicker">Servicios</p>
         <h2 id="servicios-titulo" className="section__title">
           Todo el ciclo del producto, un solo equipo

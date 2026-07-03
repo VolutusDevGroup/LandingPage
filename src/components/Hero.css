@@ -87,9 +87,14 @@
   }
 }
 
-/* Línea decodificada: mientras "descifra" emite un glow cian tenue */
+/* Línea decodificada: mientras "descifra" emite un glow cian tenue.
+   font-family mono = cada carácter ocupa el mismo ancho, así las letras
+   ya asentadas no se desplazan al reemplazar el resto por glifos aleatorios. */
 .hero__decode {
   display: inline-block;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  transition: text-shadow 0.6s var(--ease-out);
 }
 
 .hero__decode.is-decoding {

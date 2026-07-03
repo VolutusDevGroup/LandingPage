@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import useReveal from '../hooks/useReveal.js'
 import './Process.css'
 
@@ -36,6 +37,59 @@ const STEPS = [
 
 export default function Process() {
   const ref = useReveal()
+  const trackRef = useRef(null)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+
+    const list = track.querySelector('.process__timeline')
+    const steps = Array.from(list.children)
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      track.style.setProperty('--progress', '1')
+      steps.forEach((step) => step.classList.add('is-passed'))
+      return
+    }
+
+    let ticking = false
+
+    const update = () => {
+      ticking = false
+      const rect = track.getBoundingClientRect()
+      // Línea de referencia fija en el viewport (no depende de cuánto
+      // contenido haya arriba del track): la bola arranca en 0 justo
+      // cuando el inicio del riel cruza esta línea y llega a 1 cuando
+      // el final del riel la cruza, así el recorrido completo coincide
+      // con el alto real del proceso y no se adelanta al llegar.
+      const anchor = window.innerHeight * 0.72
+      const progress = Math.min(
+        1,
+        Math.max(0, (anchor - rect.top) / rect.height),
+      )
+      track.style.setProperty('--progress', progress.toFixed(4))
+
+      steps.forEach((step, i) => {
+        const threshold = i / Math.max(steps.length - 1, 1)
+        step.classList.toggle('is-passed', progress >= threshold)
+      })
+    }
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true
+        requestAnimationFrame(update)
+      }
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
 
   return (
     <section
@@ -53,18 +107,23 @@ export default function Process() {
           Un proceso transparente donde siempre sabes en qué etapa está tu
           proyecto y qué viene después.
         </p>
-        <ol className="process__timeline">
-          {STEPS.map((s, i) => (
-            <li key={s.n} className="process__step reveal__item" style={{ '--i': i }}>
-              <span className="process__node" aria-hidden="true" />
-              <span className="process__num" aria-hidden="true">
-                {s.n}
-              </span>
-              <h3 className="process__title">{s.title}</h3>
-              <p className="process__text">{s.text}</p>
-            </li>
-          ))}
+        <div className="process__track" ref={trackRef}>
+          <ol className="process__timeline">
+            {STEPS.map((s, i) => (
+              <li key={s.n} className="process__step reveal__item" style={{ '--i': i }}>
+                <span className="process__node" aria-hidden="true">
+                  {s.n}
+                </span>
+                <span className="process__connector" aria-hidden="true" />
+                <div className="process__card">
+                  <h3 className="process__title">{s.title}</h3>
+                  <p className="process__text">{s.text}</p>
+                </div>
+              </li>
+            ))}
           </ol>
+          <span className="process__ball" aria-hidden="true" />
+        </div>
         </div>
       </div>
     </section>

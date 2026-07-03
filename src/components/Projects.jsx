@@ -76,7 +76,7 @@ export default function Projects() {
       aria-labelledby="proyectos-titulo"
     >
       <div className="container">
-        <div className="panel panel--left reveal reveal--left" ref={ref}>
+        <div className="panel panel--right reveal reveal--right" ref={ref}>
         <p className="section__kicker">Proyectos Destacados</p>
         <h2 id="proyectos-titulo" className="section__title">
           Sistemas reales, en producción

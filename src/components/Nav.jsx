@@ -6,8 +6,7 @@ const LINKS = [
   ['#servicios', 'Servicios'],
   ['#stack', 'Stack'],
   ['#proyectos', 'Proyectos'],
-  ['#proceso', 'Proceso'],
-  ['#equipo', 'Equipo'],
+  ['#proceso', 'Proceso']
 ]
 
 export default function Nav() {
@@ -18,7 +17,7 @@ export default function Nav() {
       <nav className="nav__inner container" aria-label="Principal">
         <a className="nav__logo" href="#contenido">
           <span className="nav__logo-mark" aria-hidden="true" />
-          Kernel<span className="nav__logo-dim">Studio</span>
+          Volutus<span className="nav__logo-dim"></span>
         </a>
 
         <button

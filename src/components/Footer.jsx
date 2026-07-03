@@ -20,7 +20,7 @@ export default function Footer() {
         <div className="footer__brand">
           <span className="footer__logo">
             <span className="footer__logo-mark" aria-hidden="true" />
-            Kernel<span className="footer__logo-dim">Studio</span>
+            Volutus<span className="footer__logo-dim"></span>
           </span>
           <p className="footer__tagline">
             Ingeniería de software de nivel empresarial.
@@ -56,7 +56,8 @@ export default function Footer() {
       </div>
 
       <div className="footer__bottom container">
-        <p>© {new Date().getFullYear()} Kernel Studio. Todos los derechos reservados.</p>
+        
+        <p>© {new Date().getFullYear()} Volutus. Todos los derechos reservados.</p>
       </div>
     </footer>
   )

@@ -7,7 +7,6 @@ import Services from './components/Services.jsx'
 import Stack from './components/Stack.jsx'
 import Projects from './components/Projects.jsx'
 import Process from './components/Process.jsx'
-import Team from './components/Team.jsx'
 import Contact from './components/Contact.jsx'
 import Footer from './components/Footer.jsx'
 
@@ -57,7 +56,6 @@ export default function App() {
         <Stack />
         <Projects />
         <Process />
-        <Team />
         <Contact />
       </main>
       <Footer />

@@ -1,0 +1,243 @@
+/* Prisma heptagonal 3D (estética glass/holográfica de codewiki.google) */
+
+.prism {
+  /* Toda la geometría deriva del ancho de cara para escalar por breakpoint */
+  --face-w: 14.5rem;
+  --face-h: 16.5rem;
+  --prism-r: calc(var(--face-w) * 1.038); /* apotema del heptágono */
+  --cap-side: calc(var(--face-w) * 2.305); /* 2 × circunradio */
+  --spin: 60s;
+  position: relative;
+  z-index: 1;
+  margin-top: 2.5rem;
+}
+
+/* Piso de estudio: resplandor azul intenso anclado bajo el prisma,
+   como el foco de la referencia de codewiki */
+.prism::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -7rem;
+  width: min(90rem, 130vw);
+  height: 30rem;
+  transform: translateX(-50%);
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 50% 52% at 50% 55%,
+    rgba(48, 118, 255, 0.95),
+    rgba(37, 99, 235, 0.5) 38%,
+    rgba(29, 78, 216, 0.2) 60%,
+    transparent 76%
+  );
+  animation: prism-glow 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes prism-glow {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.prism__scene {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(var(--face-h) + 10rem);
+  perspective: 90rem;
+  perspective-origin: 50% 30%;
+}
+
+/* Haz de luz que "proyecta" el prisma desde arriba */
+.prism__beam {
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  width: calc(var(--cap-side) * 1.2);
+  height: 55%;
+  transform: translateX(-50%);
+  clip-path: polygon(50% 0%, 6% 100%, 94% 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(34, 211, 238, 0.14),
+    rgba(61, 139, 255, 0.05) 60%,
+    transparent
+  );
+  animation: prism-beam 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.prism__wheel {
+  position: relative;
+  width: var(--face-w);
+  height: var(--face-h);
+  transform-style: preserve-3d;
+  animation: prism-spin var(--spin) linear infinite;
+}
+
+/* Caras de vidrio: muy translúcidas, con brillo especular diagonal y
+   aristas azul claro como el cubo de referencia. La luz de estudio del
+   fondo se percibe a través (sin backdrop-filter: dentro de preserve-3d
+   Chrome lo aplana). */
+.prism__face {
+  position: absolute;
+  inset: 0;
+  padding: 1.5rem 1.35rem;
+  border: 1px solid rgba(120, 170, 255, 0.55);
+  border-radius: 0.35rem;
+  background:
+    /* highlight especular */
+    linear-gradient(
+      118deg,
+      rgba(160, 200, 255, 0.14),
+      transparent 32%,
+      transparent 68%,
+      rgba(120, 170, 255, 0.08)
+    ),
+    /* cuerpo del vidrio */
+    linear-gradient(180deg, rgba(30, 64, 140, 0.22), rgba(10, 22, 48, 0.3));
+  box-shadow:
+    inset 0 0 34px -14px rgba(96, 156, 255, 0.5),
+    0 0 26px -12px rgba(61, 139, 255, 0.55);
+  backface-visibility: hidden;
+}
+
+/* Aristas verticales luminosas del wireframe */
+.prism__face::before,
+.prism__face::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(150, 195, 255, 0.9),
+    rgba(90, 140, 230, 0.25) 50%,
+    rgba(150, 195, 255, 0.9)
+  );
+  filter: drop-shadow(0 0 5px rgba(96, 156, 255, 0.8));
+}
+
+.prism__face::before {
+  left: 0;
+}
+
+.prism__face::after {
+  right: 0;
+}
+
+.prism__label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9ec8ff;
+  margin-bottom: 0.95rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(150, 190, 255, 0.3);
+  text-shadow: 0 1px 8px rgba(2, 6, 15, 0.8);
+}
+
+.prism__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.prism__item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  color: var(--text);
+  text-shadow: 0 1px 8px rgba(2, 6, 15, 0.8);
+}
+
+.prism__node {
+  flex: none;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: #7ab0ff;
+  box-shadow: 0 0 8px rgba(122, 176, 255, 0.8);
+}
+
+/* Tapas heptagonales de cristal (el clip-path viene inline) */
+.prism__cap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--cap-side);
+  height: var(--cap-side);
+  background: radial-gradient(
+    closest-side,
+    rgba(96, 156, 255, 0.04),
+    rgba(96, 156, 255, 0.02) 55%,
+    rgba(140, 185, 255, 0.12)
+  );
+  filter: drop-shadow(0 0 8px rgba(96, 156, 255, 0.25));
+}
+
+.prism__cap--top {
+  transform: translate(-50%, -50%) rotateX(90deg)
+    translateZ(calc(var(--face-h) / 2));
+}
+
+.prism__cap--bottom {
+  transform: translate(-50%, -50%) rotateX(90deg)
+    translateZ(calc(var(--face-h) / -2));
+}
+
+@keyframes prism-spin {
+  from {
+    transform: rotateX(-9deg) rotateY(0deg);
+  }
+  to {
+    transform: rotateX(-9deg) rotateY(-360deg);
+  }
+}
+
+@keyframes prism-beam {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .prism {
+    --face-w: 9.5rem;
+    --face-h: 13.5rem;
+  }
+
+  .prism__item {
+    font-size: 0.78rem;
+  }
+}
+
+/* Sin animación: el prisma queda congelado mostrando la cara frontal;
+   el resto del contenido sigue en el DOM para lectores de pantalla. */
+@media (prefers-reduced-motion: reduce) {
+  .prism__wheel {
+    animation: none;
+    transform: rotateX(-9deg);
+  }
+
+  .prism__beam {
+    animation: none;
+  }
+}

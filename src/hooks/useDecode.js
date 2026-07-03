@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react'
 
 const GLYPHS = '!<>-_\\/[]{}=+*^?#01'
-const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3)
+// Quintic: arranca tan rápido como la cúbica pero estira la desaceleración
+// final, dando una curva de salida más larga y fluida antes de asentar.
+const easeOutQuint = (x) => 1 - Math.pow(1 - x, 5)
 
-export default function useDecode(text, { duration = 2500, dotDelay = 600 } = {}) {
+export default function useDecode(text, { duration = 1200, dotDelay = 600 } = {}) {
   const ref = useRef(null)
   const rafRef = useRef(null)
   const timeoutRef = useRef(null)
@@ -19,11 +21,9 @@ export default function useDecode(text, { duration = 2500, dotDelay = 600 } = {}
       return
     }
 
-    // Configuración inicial de estilos
-    el.style.display = 'inline-block'
-    el.style.whiteSpace = 'nowrap'
-    
     // Fijamos el ancho evaluando el texto CON el punto final
+    // (display: inline-block y white-space: nowrap ya son permanentes por CSS,
+    // así el salto de línea no vuelve a activarse al asentar el punto final)
     el.textContent = targetText
     el.style.minWidth = `${el.offsetWidth}px`
     el.classList.add('is-decoding')
@@ -32,7 +32,7 @@ export default function useDecode(text, { duration = 2500, dotDelay = 600 } = {}
     
     const step = (now) => {
       const p = Math.min((now - start) / duration, 1)
-      const easeProgress = easeOutCubic(p)
+      const easeProgress = easeOutQuint(p)
       const settled = Math.floor(easeProgress * text.length)
       
       let out = text.slice(0, settled)
@@ -52,8 +52,6 @@ export default function useDecode(text, { duration = 2500, dotDelay = 600 } = {}
           if (el) {
             el.textContent = targetText
             el.style.minWidth = ''
-            el.style.whiteSpace = ''
-            el.style.display = ''
             el.classList.remove('is-decoding')
           }
         }, dotDelay)

@@ -1,0 +1,3 @@
+# esbuild necesita su script postinstall para validar el binario nativo
+allowBuilds:
+  esbuild: true

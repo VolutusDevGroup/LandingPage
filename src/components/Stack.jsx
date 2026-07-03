@@ -1,6 +1,8 @@
 import useReveal from '../hooks/useReveal.js'
+import TechPrism from './TechPrism.jsx'
 import './Stack.css'
 
+// 7 grupos = 7 caras del prisma heptagonal
 const GROUPS = [
   {
     label: 'Frontend',
@@ -19,8 +21,12 @@ const GROUPS = [
     items: ['PostgreSQL', 'MySQL', 'MongoDB', 'Supabase'],
   },
   {
-    label: 'Cloud & DevOps',
-    items: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'Vercel', 'GitHub Actions', 'Firebase'],
+    label: 'Cloud',
+    items: ['AWS', 'Azure', 'Vercel', 'Firebase'],
+  },
+  {
+    label: 'DevOps',
+    items: ['Docker', 'Kubernetes', 'GitHub Actions'],
   },
   {
     label: 'IA',
@@ -34,11 +40,13 @@ export default function Stack() {
   return (
     <section
       id="stack"
-      className="section section--overlap stack"
+      className="section stack"
       aria-labelledby="stack-titulo"
     >
-      <div className="container">
-        <div className="panel panel--right reveal reveal--right" ref={ref}>
+      {/* Iluminación azul de estudio: telón full-bleed tras el prisma,
+          se intensifica con la velocidad del scroll (--energy) */}
+      <div className="stack__studio" aria-hidden="true" />
+      <div className="container stack__header reveal" ref={ref}>
         <p className="section__kicker">Stack Tecnológico</p>
         <h2 id="stack-titulo" className="section__title">
           Herramientas probadas, elegidas con criterio
@@ -47,23 +55,8 @@ export default function Stack() {
           Usamos tecnología moderna donde aporta y evitamos dependencias que
           solo agregan mantenimiento. El stack correcto para cada problema.
         </p>
-        <div className="stack__groups">
-          {GROUPS.map((g, i) => (
-            <div key={g.label} className="stack__group reveal__item" style={{ '--i': i }}>
-              <h3 className="stack__label">{g.label}</h3>
-              <ul className="stack__chips">
-                {g.items.map((item) => (
-                  <li key={item} className="stack__chip">
-                    <span className="stack__chip-node" aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-          </div>
-        </div>
       </div>
+      <TechPrism groups={GROUPS} />
     </section>
   )
 }
