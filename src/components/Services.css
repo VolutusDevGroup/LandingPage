@@ -1,46 +1,59 @@
-.services__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
-  gap: 1.25rem;
-  margin-top: 2.5rem;
+/* La sección de servicios es full-bleed: sin card, con una iluminación
+   azul "de estudio" — resplandor radial que emana desde el piso, bajo
+   el prisma, sobre un fondo que cae a negro. */
+.services {
+  /* Stack (section--overlap) monta sobre el final de esta sección:
+     el padding extra evita que tape el resplandor del piso. El overflow
+     recorta la barra plana del prisma, que desborda el viewport. */
+  padding-bottom: clamp(6rem, 10vw, 9rem);
+  overflow: hidden;
 }
 
-.services__card {
-  padding: 1.5rem;
+.services__studio {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* foco principal: piso iluminado en la mitad baja de la sección
+       (el resplandor intenso pegado al prisma lo pinta .prism::before) */
+    radial-gradient(
+      ellipse 60% 42% at 50% 80%,
+      rgba(37, 99, 235, 0.35),
+      rgba(23, 58, 160, 0.15) 48%,
+      transparent 72%
+    ),
+    /* relleno ambiental superior, muy tenue */
+    radial-gradient(
+      ellipse 70% 40% at 50% 15%,
+      rgba(61, 139, 255, 0.08),
+      transparent 70%
+    ),
+    /* telón que oscurece hacia negro de estudio */
+    linear-gradient(180deg, transparent, #020409 30%, #020409 70%, transparent);
+  /* La luz respira y el scroll la aviva (--energy la escribe CircuitBackground) */
+  opacity: calc(0.75 + var(--energy) * 0.25);
+  transition: opacity 0.4s ease;
+  animation: services-studio 8s ease-in-out infinite;
 }
 
-.services__icon {
-  display: inline-flex;
-  width: 2.75rem;
-  height: 2.75rem;
-  padding: 0.6rem;
-  margin-bottom: 1rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--border);
-  background: rgba(61, 139, 255, 0.08);
-  color: var(--accent-2);
-  transition:
-    box-shadow 0.35s ease,
-    color 0.35s ease;
+@keyframes services-studio {
+  0%,
+  100% {
+    filter: brightness(0.85);
+  }
+  50% {
+    filter: brightness(1.1);
+  }
 }
 
-.services__card:hover .services__icon {
-  color: #7cc8ff;
-  box-shadow: 0 0 18px -4px var(--glow);
+.services__header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
 }
 
-.services__icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.services__title {
-  font-size: 1.1rem;
-  margin-bottom: 0.4em;
-}
-
-.services__text {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  margin: 0;
+.services__header .section__title,
+.services__header .section__lead {
+  margin-inline: auto;
 }

@@ -1,4 +1,5 @@
 import useReveal from '../hooks/useReveal.js'
+import TechPrism from './TechPrism.jsx'
 import './Services.css'
 
 // Iconos inline minimalistas (trazo 1.5, estilo Lucide) — sin dependencias
@@ -46,6 +47,7 @@ const ICONS = {
   ),
 }
 
+// 7 servicios = 7 caras del prisma heptagonal
 const SERVICES = [
   {
     icon: 'web',
@@ -84,47 +86,31 @@ const SERVICES = [
   },
 ]
 
+const FACES = SERVICES.map((s) => ({
+  icon: ICONS[s.icon],
+  title: s.title,
+  text: s.text,
+}))
+
 export default function Services() {
   const ref = useReveal()
 
   return (
-    <section
-      id="servicios"
-      className="section section--overlap services"
-      aria-labelledby="servicios-titulo"
-    >
-      <div className="container">
-        <div className="panel panel--right reveal reveal--right" ref={ref}>
+    <section id="servicios" className="section services" aria-labelledby="servicios-titulo">
+      {/* Iluminación azul de estudio: telón full-bleed tras el prisma,
+          se intensifica con la velocidad del scroll (--energy) */}
+      <div className="services__studio" aria-hidden="true" />
+      <div className="container services__header reveal" ref={ref}>
         <p className="section__kicker">Servicios</p>
         <h2 id="servicios-titulo" className="section__title">
-          Todo el ciclo del producto, un solo equipo
+          Nosotros lo ajustamos para ti
         </h2>
         <p className="section__lead">
           Desde la idea hasta la operación: cubrimos frontend, backend,
           infraestructura y automatización con IA.
         </p>
-        <div className="services__grid">
-          {SERVICES.map((s, i) => (
-            <article key={s.title} className="card services__card reveal__item" style={{ '--i': i }}>
-              <span className="services__icon" aria-hidden="true">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  {ICONS[s.icon]}
-                </svg>
-              </span>
-              <h3 className="services__title">{s.title}</h3>
-              <p className="services__text">{s.text}</p>
-            </article>
-          ))}
-          </div>
-        </div>
       </div>
+      <TechPrism faces={FACES} />
     </section>
   )
 }

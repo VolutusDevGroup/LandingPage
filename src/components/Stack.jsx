@@ -1,8 +1,6 @@
 import useReveal from '../hooks/useReveal.js'
-import TechPrism from './TechPrism.jsx'
 import './Stack.css'
 
-// 7 grupos = 7 caras del prisma heptagonal
 const GROUPS = [
   {
     label: 'Frontend',
@@ -40,23 +38,36 @@ export default function Stack() {
   return (
     <section
       id="stack"
-      className="section stack"
+      className="section section--overlap stack"
       aria-labelledby="stack-titulo"
     >
-      {/* Iluminación azul de estudio: telón full-bleed tras el prisma,
-          se intensifica con la velocidad del scroll (--energy) */}
-      <div className="stack__studio" aria-hidden="true" />
-      <div className="container stack__header reveal" ref={ref}>
-        <p className="section__kicker">Stack Tecnológico</p>
-        <h2 id="stack-titulo" className="section__title">
-          Herramientas probadas, elegidas con criterio
-        </h2>
-        <p className="section__lead">
-          Usamos tecnología moderna donde aporta y evitamos dependencias que
-          solo agregan mantenimiento. El stack correcto para cada problema.
-        </p>
+      <div className="container">
+        <div className="panel panel--left reveal reveal--left" ref={ref}>
+          <p className="section__kicker">Stack Tecnológico</p>
+          <h2 id="stack-titulo" className="section__title">
+            Herramientas probadas, elegidas con criterio
+          </h2>
+          <p className="section__lead">
+            Usamos tecnología moderna donde aporta y evitamos dependencias que
+            solo agregan mantenimiento. El stack correcto para cada problema.
+          </p>
+          <div className="stack__grid">
+            {GROUPS.map((g, i) => (
+              <article key={g.label} className="card stack__card reveal__item" style={{ '--i': i }}>
+                <h3 className="stack__label">{g.label}</h3>
+                <ul className="stack__list">
+                  {g.items.map((item) => (
+                    <li key={item} className="stack__item">
+                      <span className="stack__node" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </div>
       </div>
-      <TechPrism groups={GROUPS} />
     </section>
   )
 }
