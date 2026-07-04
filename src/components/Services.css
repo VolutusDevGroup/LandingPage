@@ -2,11 +2,14 @@
    azul "de estudio" — resplandor radial que emana desde el piso, bajo
    el prisma, sobre un fondo que cae a negro. */
 .services {
-  /* Stack (section--overlap) monta sobre el final de esta sección:
-     el padding extra evita que tape el resplandor del piso. El overflow
-     recorta la barra plana del prisma, que desborda el viewport. */
+  /* Stack (section--overlap) monta sobre el final de esta sección. Solo
+     se recorta en X (la barra plana del prisma desborda el viewport);
+     en Y el resplandor del piso (.prism::before) debe poder extenderse
+     más allá de la sección, detrás de la card del stack. clip (a
+     diferencia de hidden) permite recortar un solo eje sin convertir
+     la sección en scroll container. */
   padding-bottom: clamp(6rem, 10vw, 9rem);
-  overflow: hidden;
+  overflow-x: clip;
 }
 
 .services__studio {
@@ -45,6 +48,14 @@
   50% {
     filter: brightness(1.1);
   }
+}
+
+/* Los resplandores infinitos (telón de estudio y piso del prisma) se pausan
+   cuando la sección sale del viewport (usePauseWhenHidden agrega
+   is-offscreen): animan filter, que es caro de componer, y no se ven. */
+.services.is-offscreen .services__studio,
+.services.is-offscreen .prism::before {
+  animation-play-state: paused;
 }
 
 .services__header {

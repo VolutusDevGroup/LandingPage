@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { geoOrthographic, geoPath } from 'd3-geo'
 import * as topojson from 'topojson-client'
-// Importamos directamente el mapa de baja resolución (110m) para mejor rendimiento
-import topology from 'world-atlas/countries-110m.json'
+// Topología solo-land extraída de world-atlas/countries-110m.json con
+// scripts/extract-land.mjs: mismos arcos (píxeles idénticos) pero sin los
+// polígonos de países que nunca se dibujan — el chunk pesa ~50 KB menos
+import topology from '../data/land-110m.json'
 import './Globe.css'
 
 const R = 270
@@ -46,15 +48,22 @@ const CITIES = [
 ];
 
 const rad = (deg) => (deg * Math.PI) / 180
+const TWO_PI = Math.PI * 2
 
 // --- NUEVA FÍSICA ---
 const BASE_OMEGA = 0.0002 // Velocidad de rotación constante (auto-rotación)
 const IMPULSE = 0.000006 // Reducido: el scroll inyecta menos velocidad inicial
 const OMEGA_MAX = 0.003 // Tope máximo de velocidad
 const FRICTION = 0.992 // Fricción ajustada para que vuelva más rápido a la velocidad normal
-// Al salir de escena (cuando el prisma del stack entra al viewport) el globo
-// acelera hacia esta velocidad mientras se desliza fuera por la izquierda.
+// Rotación extra cuando el globo está completamente fuera de escena; entre
+// medio se interpola según cuánto ha salido (proporcional al scroll).
 const EXIT_OMEGA = 0.006
+
+const clamp01 = (v) => Math.max(0, Math.min(1, v))
+// 0 → 1 a medida que `top` (posición en viewport) viaja de `from` a `to`
+const progress = (top, from, to) => clamp01((from - top) / (from - to))
+// Suaviza los extremos (arranca y frena sin cortes de velocidad)
+const smoothstep = (t) => t * t * (3 - 2 * t)
 
 export default function Globe() {
   const rootRef = useRef(null)
@@ -63,27 +72,60 @@ export default function Globe() {
   const landRef = useRef(null)
 
   useEffect(() => {
-    // El globo y el prisma de tecnologías no comparten pantalla: cuando la
-    // sección #stack se acerca al viewport, el globo se retira (clase CSS)
-    // girando aceleradamente (flag leído por el bucle de física).
-    let exiting = false
+    // El globo y el prisma de tecnologías no comparten pantalla: mientras
+    // #stack entra al viewport el globo se desliza fuera por la izquierda, y
+    // regresa a medida que #proyectos avanza. Todo va atado a la posición del
+    // scroll (no a un trigger con transición de tiempo fijo), así que revertir
+    // el scroll también revierte el movimiento.
     const globeEl = rootRef.current
     const stackEl = document.getElementById('stack')
-    let observer = null
-    if (stackEl && 'IntersectionObserver' in window) {
-      observer = new IntersectionObserver(
-        ([entry]) => {
-          exiting = entry.isIntersecting
-          globeEl.classList.toggle('globe--away', exiting)
-        },
-        { rootMargin: '15% 0px 15% 0px' },
-      )
-      observer.observe(stackEl)
-    }
+    const projectsEl = document.getElementById('proyectos')
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Sin animaciones: se oculta/muestra de golpe vía clase CSS
+      let observer = null
+      if (stackEl && 'IntersectionObserver' in window) {
+        observer = new IntersectionObserver(
+          ([entry]) => {
+            globeEl.classList.toggle('globe--away', entry.isIntersecting)
+          },
+          { rootMargin: '15% 0px 15% 0px' },
+        )
+        observer.observe(stackEl)
+      }
       return () => observer?.disconnect()
     }
+
+    // Anclajes de las secciones en coordenadas de documento: se miden una vez
+    // y se re-miden solo cuando cambia el layout (resize, contenido diferido),
+    // nunca durante el scroll — así el bucle no fuerza reflows.
+    let vh = window.innerHeight
+    let stackTop = 0
+    let projectsTop = 0
+    const measure = () => {
+      vh = window.innerHeight
+      const y = window.scrollY
+      if (stackEl) stackTop = stackEl.getBoundingClientRect().top + y
+      if (projectsEl) projectsTop = projectsEl.getBoundingClientRect().top + y
+    }
+
+    // 0 = en escena, 1 = fuera; pura aritmética sobre scrollY (sin tocar DOM)
+    let awayTarget = 0
+    const updateAwayTarget = () => {
+      if (!stackEl) return
+      const y = window.scrollY
+      // Sale mientras el stack entra: de "top toca el borde inferior" a
+      // "top llega al 35% del viewport"
+      const out = progress(stackTop - y, vh, vh * 0.35)
+      // Regresa mientras proyectos destacados avanza hacia arriba
+      const back = projectsEl
+        ? progress(projectsTop - y, vh * 0.9, vh * 0.25)
+        : 0
+      // smoothstep: entra y sale del recorrido sin cortes de velocidad
+      awayTarget = smoothstep(Math.min(out, 1 - back))
+    }
+    measure()
+    updateAwayTarget()
 
     const meridians = meridiansRef.current.querySelectorAll('ellipse')
     const cities = citiesRef.current.querySelectorAll('circle')
@@ -95,6 +137,10 @@ export default function Globe() {
     let lastT = 0
     let raf = null
     let frame = 0
+    // Arranca ya en su posición correcta (p. ej. si la página carga con el
+    // scroll a mitad del stack) en vez de deslizarse desde afuera
+    let away = awayTarget
+    let appliedAway = -1 // fuerza la primera escritura
 
     const render = () => {
       meridians.forEach((el, i) => {
@@ -126,16 +172,35 @@ export default function Globe() {
       lastT = now
 
       phi += omega * dt
+      // phi es cíclico (solo se usa en senos/cosenos y en la rotación de la
+      // proyección): acotarlo evita que crezca sin límite y pierda precisión
+      // de coma flotante en sesiones largas
+      if (phi > TWO_PI) phi -= TWO_PI
+      else if (phi < -TWO_PI) phi += TWO_PI
+
+      // Persigue el valor dictado por el scroll con suavizado exponencial:
+      // amortigua los saltos discretos de la rueda del mouse sin dejar de
+      // estar anclado a la posición del scroll.
+      away += (awayTarget - away) * (1 - Math.exp(-dt / 180))
+      if (Math.abs(awayTarget - away) < 0.001) away = awayTarget
+      // Solo escribe al DOM si el valor cambió de verdad (en reposo el
+      // compositor no recibe nada)
+      if (Math.abs(away - appliedAway) > 0.0005) {
+        appliedAway = away
+        globeEl.style.transform = `translate3d(${(-130 * away).toFixed(2)}%, -50%, 0)`
+        globeEl.style.opacity = (0.6 * (1 - away)).toFixed(3)
+      }
 
       // La fricción ahora actúa sobre el "exceso" o "déficit" de velocidad.
       // Si haces scroll rápido, omega sube. Esta fórmula lo reduce suavemente
-      // hasta que vuelva a ser exactamente su velocidad objetivo — la base o,
-      // si el globo está saliendo de escena, la de giro acelerado.
-      const target = exiting ? EXIT_OMEGA : BASE_OMEGA
+      // hasta que vuelva a ser exactamente su velocidad objetivo — la base
+      // más un giro extra proporcional a cuánto ha salido de escena.
+      const target = BASE_OMEGA + (EXIT_OMEGA - BASE_OMEGA) * away
       const excess = omega - target
       omega = target + excess * (FRICTION ** dt)
 
-      render()
+      // Con el globo fuera de pantalla no vale la pena recalcular los paths
+      if (away < 0.999) render()
       raf = requestAnimationFrame(tick) // El bucle ya no se detiene nunca
     }
 
@@ -144,16 +209,30 @@ export default function Globe() {
       lastY = window.scrollY
       // Inyectamos el impulso sumándolo a la velocidad actual
       omega = Math.max(-OMEGA_MAX, Math.min(OMEGA_MAX, omega + delta * IMPULSE))
+      updateAwayTarget()
     }
+
+    const onResize = () => {
+      measure()
+      updateAwayTarget()
+    }
+
+    // El contenido diferido (imágenes, chunks lazy) mueve las secciones:
+    // re-medimos cuando cambia la altura del documento, no en cada frame
+    const bodyObserver =
+      'ResizeObserver' in window ? new ResizeObserver(onResize) : null
+    bodyObserver?.observe(document.body)
 
     // Iniciamos el renderizado infinito
     raf = requestAnimationFrame(tick)
     window.addEventListener('scroll', onScroll, { passive: true })
-    
+    window.addEventListener('resize', onResize)
+
     return () => {
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+      bodyObserver?.disconnect()
       if (raf) cancelAnimationFrame(raf)
-      observer?.disconnect()
     }
   }, [])
 

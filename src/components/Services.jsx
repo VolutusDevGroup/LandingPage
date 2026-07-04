@@ -1,5 +1,7 @@
 import useReveal from '../hooks/useReveal.js'
+import usePauseWhenHidden from '../hooks/usePauseWhenHidden.js'
 import TechPrism from './TechPrism.jsx'
+import { GROUPS } from '../data/stack.js'
 import './Services.css'
 
 // Iconos inline minimalistas (trazo 1.5, estilo Lucide) — sin dependencias
@@ -23,9 +25,11 @@ const ICONS = {
       <path d="M7 7.5h.01M7 16.5h.01" />
     </>
   ),
-  api: (
+  db: (
     <>
-      <path d="M9 8l-4 4 4 4M15 8l4 4-4 4" />
+      <ellipse cx="12" cy="5" rx="8" ry="2.6" />
+      <path d="M4 5v14c0 1.44 3.58 2.6 8 2.6s8-1.16 8-2.6V5" />
+      <path d="M4 12c0 1.44 3.58 2.6 8 2.6s8-1.16 8-2.6" />
     </>
   ),
   cloud: (
@@ -47,56 +51,24 @@ const ICONS = {
   ),
 }
 
-// 7 servicios = 7 caras del prisma heptagonal
-const SERVICES = [
-  {
-    icon: 'web',
-    title: 'Desarrollo Web',
-    text: 'Sitios y aplicaciones web rápidas, accesibles y optimizadas para SEO, desde landings estáticas hasta plataformas completas.',
-  },
-  {
-    icon: 'mobile',
-    title: 'Desarrollo Mobile',
-    text: 'Apps Android nativas con Kotlin y Jetpack Compose: interfaces fluidas, arquitectura MVVM y publicación en Play Store.',
-  },
-  {
-    icon: 'backend',
-    title: 'Backend',
-    text: 'Servicios robustos con Node.js, Python y Spring Boot sobre PostgreSQL, MySQL o MongoDB, con migraciones y tests.',
-  },
-  {
-    icon: 'api',
-    title: 'APIs e Integraciones',
-    text: 'APIs REST bien documentadas e integraciones con terceros: pagos, correo, mapas, mensajería y servicios de datos.',
-  },
-  {
-    icon: 'cloud',
-    title: 'Cloud',
-    text: 'Arquitecturas en AWS, Azure, Vercel y Supabase: cómputo, almacenamiento, CDN y bases de datos gestionadas a costo controlado.',
-  },
-  {
-    icon: 'ia',
-    title: 'Inteligencia Artificial',
-    text: 'Agentes y automatizaciones con LLMs: clasificación de datos, procesamiento de documentos y flujos que ahorran horas de trabajo.',
-  },
-  {
-    icon: 'devops',
-    title: 'DevOps',
-    text: 'CI/CD con GitHub Actions, contenedores con Docker y Kubernetes, monitoreo y despliegues reproducibles.',
-  },
-]
-
-const FACES = SERVICES.map((s) => ({
-  icon: ICONS[s.icon],
-  title: s.title,
-  text: s.text,
+// 7 grupos del stack = 7 caras del prisma heptagonal, con sus bulletpoints
+const FACES = GROUPS.map((g) => ({
+  icon: ICONS[g.icon],
+  title: g.label,
+  items: g.items,
 }))
 
 export default function Services() {
   const ref = useReveal()
+  const pauseRef = usePauseWhenHidden()
 
   return (
-    <section id="servicios" className="section services" aria-labelledby="servicios-titulo">
+    <section
+      id="servicios"
+      className="section services"
+      aria-labelledby="servicios-titulo"
+      ref={pauseRef}
+    >
       {/* Iluminación azul de estudio: telón full-bleed tras el prisma,
           se intensifica con la velocidad del scroll (--energy) */}
       <div className="services__studio" aria-hidden="true" />

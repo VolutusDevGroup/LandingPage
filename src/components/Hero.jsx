@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef } from 'react'
 import useDecode from '../hooks/useDecode.js'
+import usePauseWhenHidden from '../hooks/usePauseWhenHidden.js'
 import './Hero.css'
 
 const TITLE_WORDS = ['Software', 'que', 'se', 'siente']
@@ -34,9 +35,10 @@ function StatValue({ value, prefix = '', suffix = '' }) {
 
 export default function Hero() {
   const { ref: decodeRef, play: replayDecode } = useDecode(DECODED_LINE)
+  const pauseRef = usePauseWhenHidden()
 
   return (
-    <section className="hero" aria-labelledby="hero-titulo">
+    <section className="hero" aria-labelledby="hero-titulo" ref={pauseRef}>
       <div className="hero__glow" aria-hidden="true" />
       <div className="hero__content container">
         <p className="hero__kicker">

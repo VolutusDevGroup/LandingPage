@@ -1,10 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Analytics } from '@vercel/analytics/react'
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
 import About from './components/About.jsx'
 import Services from './components/Services.jsx'
-import Stack from './components/Stack.jsx'
 import Projects from './components/Projects.jsx'
 import Process from './components/Process.jsx'
 import Contact from './components/Contact.jsx'
@@ -18,6 +16,11 @@ const CircuitBackground = lazy(
   () => import('./components/CircuitBackground.jsx'),
 )
 const Globe = lazy(() => import('./components/Globe.jsx'))
+// Analytics tampoco es crítico para el primer paint: va en el mismo grupo
+// diferido que los adornos, fuera del bundle de hidratación
+const Analytics = lazy(() =>
+  import('@vercel/analytics/react').then((m) => ({ default: m.Analytics })),
+)
 
 function useDecorReady() {
   const [ready, setReady] = useState(false)
@@ -46,6 +49,7 @@ export default function App() {
         <Suspense fallback={null}>
           <CircuitBackground />
           <Globe />
+          <Analytics />
         </Suspense>
       )}
       <Nav />
@@ -53,7 +57,6 @@ export default function App() {
         <Hero />
         <About />
         <Services />
-        <Stack />
         <Projects />
         <Process />
         <Contact />
