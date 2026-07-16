@@ -1,4 +1,7 @@
+import Typewriter from './Typewriter'
 import './Hero.css'
+
+const PALABRAS = ['soluciones', 'resultados', 'respuestas']
 
 export default function Hero() {
   return (
@@ -7,7 +10,9 @@ export default function Hero() {
         <div className="hero__layout">
           <div>
             <h1 id="hero-titulo" className="hero__title">
-              No buscamos problemas, sino soluciones
+              <span>No buscamos problemas, sino</span>
+              <span className="visually-hidden">soluciones</span>
+              <Typewriter words={PALABRAS} />
             </h1>
             <p className="hero__lead">
               Como la nube volutus — una sola onda, precisa, que cruza el

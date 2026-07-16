@@ -4,16 +4,21 @@
 
 .hero__layout {
   display: grid;
-  grid-template-columns: 0.7fr 1.9fr;
-  align-items: stretch;
+  grid-template-columns: 1fr 1.4fr;
+  align-items: center;
   gap: 40px;
 }
 
 .hero__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: fit-content;
+  column-gap: 0.3em;
+  row-gap: 4px;
   font-size: clamp(30px, 4vw, 46px);
   line-height: 1.05;
   margin: 0 0 20px;
-  text-wrap: balance;
 }
 
 .hero__lead {
