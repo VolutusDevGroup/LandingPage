@@ -1,64 +1,33 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense } from 'react'
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
 import About from './components/About.jsx'
 import Services from './components/Services.jsx'
 import Projects from './components/Projects.jsx'
-import Process from './components/Process.jsx'
 import Contact from './components/Contact.jsx'
 import Footer from './components/Footer.jsx'
 
-// Los adornos (circuito + globo) son decorativos (aria-hidden): se cargan en
-// chunks aparte y se montan cuando el hilo queda libre tras el primer paint.
-// En el prerender no existen (useEffect no corre), así el HTML y el JS
-// críticos quedan más livianos sin costo de SEO ni accesibilidad.
-const CircuitBackground = lazy(
-  () => import('./components/CircuitBackground.jsx'),
-)
-const Globe = lazy(() => import('./components/Globe.jsx'))
-// Analytics tampoco es crítico para el primer paint: va en el mismo grupo
-// diferido que los adornos, fuera del bundle de hidratación
+// Analytics no es crítico para el primer paint: carga en un chunk aparte
+// fuera del bundle de hidratación.
 const Analytics = lazy(() =>
   import('@vercel/analytics/react').then((m) => ({ default: m.Analytics })),
 )
 
-function useDecorReady() {
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    if ('requestIdleCallback' in window) {
-      const id = requestIdleCallback(() => setReady(true), { timeout: 1500 })
-      return () => cancelIdleCallback(id)
-    }
-    const t = setTimeout(() => setReady(true), 200)
-    return () => clearTimeout(t)
-  }, [])
-
-  return ready
-}
-
 export default function App() {
-  const decorReady = useDecorReady()
-
   return (
     <>
       <a className="skip-link" href="#contenido">
         Saltar al contenido
       </a>
-      {decorReady && (
-        <Suspense fallback={null}>
-          <CircuitBackground />
-          <Globe />
-          <Analytics />
-        </Suspense>
-      )}
+      <Suspense fallback={null}>
+        <Analytics />
+      </Suspense>
       <Nav />
       <main id="contenido">
         <Hero />
         <About />
         <Services />
         <Projects />
-        <Process />
         <Contact />
       </main>
       <Footer />

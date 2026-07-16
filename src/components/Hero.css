@@ -1,151 +1,77 @@
 .hero {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 100svh;
-  padding: 7rem 0 4rem;
-  overflow: hidden;
+  padding: 56px 0 64px;
 }
 
-.hero__glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    45rem 30rem at 50% 20%,
-    rgba(61, 139, 255, 0.12),
-    transparent 65%
-  );
-  pointer-events: none;
-}
-
-.hero__content {
-  position: relative;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.hero__kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 1rem;
-  margin: 0 0 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: rgba(14, 20, 29, 0.6);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-}
-
-.hero__status {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--accent-2);
-  box-shadow: 0 0 10px var(--accent-2);
-  animation: hero-status-pulse 2.6s ease-in-out infinite;
-}
-
-@keyframes hero-status-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
-/* Las animaciones infinitas del hero se pausan cuando la sección sale del
-   viewport (usePauseWhenHidden agrega is-offscreen): no se ven y consumían
-   compositor de fondo. */
-.hero.is-offscreen .hero__status,
-.hero.is-offscreen .electric-text {
-  animation-play-state: paused;
+.hero__intro {
+  max-width: 62ch;
+  margin-bottom: 40px;
 }
 
 .hero__title {
-  font-size: clamp(2.5rem, 7vw, 4.75rem);
-  font-weight: 750;
-  max-width: 18ch;
+  font-size: clamp(38px, 6vw, 76px);
+  line-height: 1.03;
+  margin: 0 0 24px;
+  text-wrap: balance;
 }
 
-/* Primera línea: las palabras entran en cascada con un tinte leve
-   blanco → azul hielo (el mismo de los stats) */
-.hero__word {
-  display: inline-block;
-  background: linear-gradient(120deg, var(--text) 55%, #9fc3ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  opacity: 0;
-  transform: translateY(0.55em);
-  animation: hero-word-in 0.7s var(--ease-out) forwards;
-  animation-delay: calc(var(--w, 0) * 110ms);
-}
-
-@keyframes hero-word-in {
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Línea decodificada: mientras "descifra" emite un glow cian tenue.
-   font-family mono = cada carácter ocupa el mismo ancho, así las letras
-   ya asentadas no se desplazan al reemplazar el resto por glifos aleatorios. */
-.hero__decode {
-  display: inline-block;
-  white-space: nowrap;
-  font-family: var(--font-mono);
-  transition: text-shadow 0.6s var(--ease-out);
-}
-
-.hero__decode.is-decoding {
-  text-shadow: 0 0 22px rgba(34, 211, 238, 0.35);
-}
-
-.hero__subtitle {
-  color: var(--text-muted);
-  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-  max-width: 54ch;
-  margin-bottom: 2.25rem;
+.hero__lead {
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 52ch;
+  margin: 0 0 32px;
+  color: var(--color-neutral-700);
 }
 
 .hero__actions {
   display: flex;
+  gap: 12px;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
+}
+
+.hero__figure {
+  margin: 0;
+  border: 2px solid var(--color-divider);
+  padding: 8px;
+  background: var(--color-surface);
+}
+
+.hero__image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1500 / 390;
+  object-fit: cover;
+}
+
+.hero__caption {
+  margin: 8px 4px 0;
+  font-size: 11px;
+  color: var(--color-neutral-600);
 }
 
 .hero__stats {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(1.5rem, 5vw, 4rem);
-  margin: 4rem 0 0;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-  width: min(100%, 44rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 1px;
+  background: var(--color-divider);
+  border-top: 2px solid var(--color-divider);
+  border-bottom: 2px solid var(--color-divider);
+  margin: 48px 0 0;
 }
 
-.hero__stat dt {
-  order: 2;
-  font-size: 0.85rem;
-  color: var(--text-muted);
+.hero__stat {
+  background: var(--color-bg);
+  padding: 20px 24px;
 }
 
-.hero__stat dd {
+.hero__stat-value {
   margin: 0;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  background: linear-gradient(120deg, var(--text), #9fc3ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 34px;
+  letter-spacing: -0.02em;
+}
+
+.hero__stat-label {
+  font-size: 13px;
+  color: var(--color-neutral-600);
 }

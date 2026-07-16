@@ -4,7 +4,6 @@ const LINKS = [
   ['#quienes-somos', 'Quiénes Somos'],
   ['#servicios', 'Servicios'],
   ['#proyectos', 'Proyectos'],
-  ['#proceso', 'Proceso'],
   ['#contacto', 'Contacto'],
 ]
 
@@ -15,48 +14,42 @@ const SOCIAL = [
 
 export default function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer section-divider">
       <div className="footer__inner container">
-        <div className="footer__brand">
-          <span className="footer__logo">
+        <div>
+          <p className="footer__logo">
             <span className="footer__logo-mark" aria-hidden="true" />
-            Volutus<span className="footer__logo-dim"></span>
-          </span>
+            Volutus
+          </p>
           <p className="footer__tagline">
             Ingeniería de software de nivel empresarial.
           </p>
         </div>
 
         <nav className="footer__nav" aria-label="Pie de página">
-          <ul className="footer__links">
-            {LINKS.map(([href, label]) => (
-              <li key={href}>
-                <a className="footer__link" href={href}>
-                  {label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {LINKS.map(([href, label]) => (
+            <a key={href} className="footer__link" href={href}>
+              {label}
+            </a>
+          ))}
         </nav>
 
-        <ul className="footer__social">
+        <div className="footer__social">
           {SOCIAL.map(([href, label]) => (
-            <li key={label}>
-              <a
-                className="footer__link"
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {label}
-              </a>
-            </li>
+            <a
+              key={label}
+              className="footer__link"
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {label}
+            </a>
           ))}
-        </ul>
+        </div>
       </div>
 
       <div className="footer__bottom container">
-        
         <p>© {new Date().getFullYear()} Volutus. Todos los derechos reservados.</p>
       </div>
     </footer>
