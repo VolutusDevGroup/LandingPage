@@ -22,7 +22,7 @@ export default function Footer() {
             Volutus
           </p>
           <p className="footer__tagline">
-            Ingeniería de software de nivel empresarial.
+            Soluciones simples para tu negocio.
           </p>
         </div>
 

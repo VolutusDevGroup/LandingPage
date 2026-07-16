@@ -1,24 +1,25 @@
 .hero {
-  padding: 56px 0 64px;
+  padding: 56px 0 32px;
 }
 
-.hero__intro {
-  max-width: 62ch;
-  margin-bottom: 40px;
+.hero__layout {
+  display: grid;
+  grid-template-columns: 0.7fr 1.9fr;
+  align-items: stretch;
+  gap: 40px;
 }
 
 .hero__title {
-  font-size: clamp(38px, 6vw, 76px);
-  line-height: 1.03;
-  margin: 0 0 24px;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.05;
+  margin: 0 0 20px;
   text-wrap: balance;
 }
 
 .hero__lead {
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.6;
-  max-width: 52ch;
-  margin: 0 0 32px;
+  margin: 0 0 28px;
   color: var(--color-neutral-700);
 }
 
@@ -29,6 +30,9 @@
 }
 
 .hero__figure {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   margin: 0;
   border: 2px solid var(--color-divider);
   padding: 8px;
@@ -38,40 +42,38 @@
 .hero__image {
   width: 100%;
   height: auto;
-  aspect-ratio: 1500 / 390;
   object-fit: cover;
+  display: block;
 }
 
 .hero__caption {
   margin: 8px 4px 0;
-  font-size: 11px;
-  color: var(--color-neutral-600);
-}
-
-.hero__stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-  gap: 1px;
-  background: var(--color-divider);
-  border-top: 2px solid var(--color-divider);
-  border-bottom: 2px solid var(--color-divider);
-  margin: 48px 0 0;
-}
-
-.hero__stat {
-  background: var(--color-bg);
-  padding: 20px 24px;
-}
-
-.hero__stat-value {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 34px;
-  letter-spacing: -0.02em;
-}
-
-.hero__stat-label {
   font-size: 13px;
-  color: var(--color-neutral-600);
+  color: var(--color-neutral-700);
+}
+
+@media (max-width: 900px) {
+  .hero__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Parallax sutil sin JS: progreso ligado al scroll, no al tiempo,
+   por eso requiere su propio gate de reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .hero__figure {
+      animation: hero-parallax linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes hero-parallax {
+  from {
+    transform: translateY(24px);
+  }
+  to {
+    transform: translateY(-24px);
+  }
 }
