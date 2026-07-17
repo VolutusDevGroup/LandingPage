@@ -8,9 +8,10 @@ const PILARES = [
       'Construir software confiable que resuelva problemas reales de negocio, con la calidad de un equipo grande y la cercanía de uno pequeño.',
     imagen: {
       src: '/image/volutus.webp',
+      srcSet: '/image/volutus-480.webp 480w, /image/volutus.webp 640w',
       alt: 'Nube volutus vista desde el ala de una avioneta, cruzando el cielo en una sola onda continua',
       width: 640,
-      height: 430,
+      height: 352,
     },
   },
   {
@@ -20,6 +21,7 @@ const PILARES = [
       'Ser el equipo al que se recurre cuando el software tiene que funcionar bien desde el primer día — y seguir en el aire sin sorpresas.',
     imagen: {
       src: '/image/john-riedl-640.webp',
+      srcSet: '/image/john-riedl-480.webp 480w, /image/john-riedl-640.webp 640w',
       alt: 'Vista aérea rasante de la nube volutus avanzando hacia el horizonte al amanecer',
       width: 640,
       height: 480,
@@ -32,6 +34,7 @@ const PILARES = [
       'Dependencias mínimas, rendimiento medible y seguridad por diseño. Como la volutus: nada sobra, y por eso vuela.',
     imagen: {
       src: '/image/volutus2-640.webp',
+      srcSet: '/image/volutus2-480.webp 480w, /image/volutus2-640.webp 640w',
       alt: 'Varias nubes volutus paralelas sobrevolando la costa, cada una una sola forma sin nada de más',
       width: 640,
       height: 427,
@@ -92,6 +95,8 @@ export default function About() {
                   <img
                     className="about__panel-img"
                     src={p.imagen.src}
+                    srcSet={p.imagen.srcSet}
+                    sizes="(max-width: 640px) 100vw, 455px"
                     alt={p.imagen.alt}
                     width={p.imagen.width}
                     height={p.imagen.height}

@@ -43,14 +43,13 @@ Estas prioridades tienen precedencia sobre cualquier otra decisión.
 
 El objetivo principal es alcanzar el máximo rendimiento posible en SEO.
 
-La implementación debe aspirar a obtener:
+La implementación debe aspirar a obtener en Google Lighthouse.:
 
 - 100 Performance
 - 100 Accessibility
 - 100 Best Practices
 - 100 SEO
-
-en Google Lighthouse.
+- 3/3 Agentic Search
 
 Cada cambio debe evaluarse considerando su impacto sobre estas métricas.
 
@@ -154,7 +153,7 @@ Ser eficiente con el uso de recursos.
 
 Cuando sea necesario obtener información del proyecto, utilizar el Vault de Obsidian ubicado en:
 
-`C:\PC`
+`C:\VaultObsidian`
 
 Utilizar esa documentación como fuente de verdad antes de asumir información.
 

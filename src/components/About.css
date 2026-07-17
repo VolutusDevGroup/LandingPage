@@ -1,5 +1,7 @@
 .about {
   padding: 64px 0;
+  /* Curva in-out para el desplazamiento del slider: acelera y frena suave */
+  --ease-slide: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .about__titulo {
@@ -33,8 +35,8 @@
   height: 2px;
   background: var(--color-accent);
   transition:
-    transform 0.4s var(--ease-out),
-    width 0.4s var(--ease-out);
+    transform 0.6s var(--ease-slide),
+    width 0.6s var(--ease-slide);
 }
 
 .about__tab {
@@ -73,14 +75,17 @@
   color: var(--color-accent);
 }
 
-/* Paneles en pista horizontal: al cambiar de tab, la pista se desliza */
+/* Paneles en pista horizontal: al cambiar de tab, la pista se desliza.
+   La coreografía se apoya en el atributo inert que alterna client.js:
+   el panel saliente se desvanece y el entrante llega con imagen y texto
+   asentándose a ritmos escalonados. */
 .about__panels {
   overflow: hidden;
 }
 
 .about__track {
   display: flex;
-  transition: transform 0.5s var(--ease-out);
+  transition: transform 0.7s var(--ease-slide);
 }
 
 .about__panel {
@@ -89,18 +94,23 @@
   grid-template-columns: 1fr 1fr;
   gap: 32px;
   align-items: center;
+  transition: opacity 0.55s var(--ease-out);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .about__track {
-    transition: none;
-  }
+.about__panel[inert] {
+  opacity: 0;
 }
 
 .about__panel-img {
   width: 100%;
   height: 280px;
   object-fit: cover;
+  transition: transform 1s var(--ease-out) 0.15s;
+}
+
+.about__panel[inert] .about__panel-img {
+  transform: scale(1.07);
+  transition-delay: 0s;
 }
 
 .about__panel-titulo {
@@ -112,6 +122,45 @@
   font-size: 15px;
   line-height: 1.6;
   color: var(--color-neutral-700);
+}
+
+.about__panel-titulo,
+.about__panel-texto {
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+
+.about__panel-titulo {
+  transition-delay: 0.2s;
+}
+
+.about__panel-texto {
+  transition-delay: 0.3s;
+}
+
+.about__panel[inert] :is(.about__panel-titulo, .about__panel-texto) {
+  opacity: 0;
+  transform: translateY(14px);
+  transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about__track,
+  .about__panel,
+  .about__panel-img,
+  .about__panel-titulo,
+  .about__panel-texto {
+    transition: none;
+  }
+
+  .about__panel[inert] .about__panel-img {
+    transform: none;
+  }
+
+  .about__panel[inert] :is(.about__panel-titulo, .about__panel-texto) {
+    transform: none;
+  }
 }
 
 @media (max-width: 640px) {
