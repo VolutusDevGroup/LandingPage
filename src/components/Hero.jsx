@@ -1,5 +1,4 @@
 import Typewriter from './Typewriter'
-import './Hero.css'
 
 const PALABRAS = ['soluciones', 'resultados', 'respuestas']
 

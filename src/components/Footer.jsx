@@ -1,5 +1,3 @@
-import './Footer.css'
-
 const LINKS = [
   ['#quienes-somos', 'Quiénes Somos'],
   ['#servicios', 'Servicios'],

@@ -11,15 +11,24 @@ const indexPath = `${root}dist/index.html`
 const { render } = await import(new URL('../.prerender/entry-server.js', import.meta.url))
 
 const marker = '<div id="root"></div>'
-const html = readFileSync(indexPath, 'utf8')
+let html = readFileSync(indexPath, 'utf8')
 if (!html.includes(marker)) {
   throw new Error(`prerender: no se encontró ${marker} en dist/index.html`)
 }
 
-writeFileSync(
-  indexPath,
-  html.replace(marker, `<div id="root">${render()}</div>`),
-)
+html = html.replace(marker, `<div id="root">${render()}</div>`)
+
+// Inline del CSS: el <link rel="stylesheet"> bloquea el primer paint por una
+// request extra (~3 KB gzip). Inlinearlo la elimina del critical path.
+const cssLink = html.match(/<link rel="stylesheet"[^>]*href="\/(assets\/[^"]+\.css)"[^>]*>/)
+if (!cssLink) {
+  throw new Error('prerender: no se encontró el <link rel="stylesheet"> en dist/index.html')
+}
+const css = readFileSync(`${root}dist/${cssLink[1]}`, 'utf8').trim()
+html = html.replace(cssLink[0], `<style>${css}</style>`)
+rmSync(`${root}dist/${cssLink[1]}`)
+
+writeFileSync(indexPath, html)
 rmSync(`${root}.prerender`, { recursive: true, force: true })
 
-console.log('prerender: HTML inyectado en dist/index.html')
+console.log('prerender: HTML inyectado y CSS inline en dist/index.html')

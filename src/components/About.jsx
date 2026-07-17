@@ -1,7 +1,5 @@
-import { useLayoutEffect, useRef, useState } from 'react'
-import useReveal from '../hooks/useReveal.js'
-import './About.css'
-
+// Presentacional: renderiza el primer pilar activo; la interacción de las
+// tabs (click, teclado, indicador) corre en el cliente (src/client.js).
 const PILARES = [
   {
     numero: '01',
@@ -21,10 +19,10 @@ const PILARES = [
     texto:
       'Ser el equipo al que se recurre cuando el software tiene que funcionar bien desde el primer día — y seguir en el aire sin sorpresas.',
     imagen: {
-      src: '/image/John-Riedl-700x525.jpg',
+      src: '/image/john-riedl-640.webp',
       alt: 'Vista aérea rasante de la nube volutus avanzando hacia el horizonte al amanecer',
-      width: 700,
-      height: 525,
+      width: 640,
+      height: 480,
     },
   },
   {
@@ -33,49 +31,15 @@ const PILARES = [
     texto:
       'Dependencias mínimas, rendimiento medible y seguridad por diseño. Como la volutus: nada sobra, y por eso vuela.',
     imagen: {
-      src: '/image/volutus2.jpg',
+      src: '/image/volutus2-640.webp',
       alt: 'Varias nubes volutus paralelas sobrevolando la costa, cada una una sola forma sin nada de más',
-      width: 678,
-      height: 452,
+      width: 640,
+      height: 427,
     },
   },
 ]
 
 export default function About() {
-  const [activo, setActivo] = useState(0)
-  const ref = useReveal()
-  const tabRefs = useRef([])
-  const [indicador, setIndicador] = useState({ transform: 'translateX(0px)', width: '0px' })
-
-  useLayoutEffect(() => {
-    function medir() {
-      const el = tabRefs.current[activo]
-      if (!el) return
-      setIndicador({
-        transform: `translateX(${el.offsetLeft}px)`,
-        width: `${el.offsetWidth}px`,
-      })
-    }
-    medir()
-    window.addEventListener('resize', medir)
-    return () => window.removeEventListener('resize', medir)
-  }, [activo])
-
-  function moverFoco(indice) {
-    setActivo(indice)
-    tabRefs.current[indice]?.focus()
-  }
-
-  function alPresionarTecla(evento) {
-    const total = PILARES.length
-    if (evento.key === 'ArrowRight') moverFoco((activo + 1) % total)
-    else if (evento.key === 'ArrowLeft') moverFoco((activo - 1 + total) % total)
-    else if (evento.key === 'Home') moverFoco(0)
-    else if (evento.key === 'End') moverFoco(total - 1)
-    else return
-    evento.preventDefault()
-  }
-
   return (
     <section
       id="quienes-somos"
@@ -93,22 +57,19 @@ export default function About() {
           no con promesas.
         </p>
 
-        <div className="about__tabs reveal" ref={ref}>
+        <div className="about__tabs reveal">
           <div className="about__tablist" role="tablist" aria-label="Pilares de Volutus">
-            <span className="about__tab-indicador" style={indicador} aria-hidden="true" />
+            <span className="about__tab-indicador" aria-hidden="true" />
             {PILARES.map((p, i) => (
               <button
                 key={p.numero}
                 type="button"
                 role="tab"
                 id={`tab-${p.numero}`}
-                aria-selected={i === activo}
+                aria-selected={i === 0}
                 aria-controls={`panel-${p.numero}`}
-                tabIndex={i === activo ? 0 : -1}
-                ref={(el) => (tabRefs.current[i] = el)}
-                className={`about__tab${i === activo ? ' is-activa' : ''}`}
-                onClick={() => setActivo(i)}
-                onKeyDown={alPresionarTecla}
+                tabIndex={i === 0 ? 0 : -1}
+                className={`about__tab${i === 0 ? ' is-activa' : ''}`}
               >
                 <span className="about__numero">{p.numero}</span>
                 {p.titulo}
@@ -117,18 +78,15 @@ export default function About() {
           </div>
 
           <div className="about__panels">
-            <div
-              className="about__track"
-              style={{ transform: `translateX(-${activo * 100}%)` }}
-            >
+            <div className="about__track">
               {PILARES.map((p, i) => (
                 <div
                   key={p.numero}
                   id={`panel-${p.numero}`}
                   role="tabpanel"
                   aria-labelledby={`tab-${p.numero}`}
-                  tabIndex={i === activo ? 0 : -1}
-                  inert={i !== activo}
+                  tabIndex={i === 0 ? 0 : -1}
+                  inert={i !== 0}
                   className="about__panel"
                 >
                   <img

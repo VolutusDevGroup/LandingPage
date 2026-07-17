@@ -1,5 +1,4 @@
 import { SERVICIOS } from '../data/services.js'
-import './Services.css'
 
 function ServiceIcon({ paths }) {
   return (

@@ -1,11 +1,8 @@
-import useReveal from '../hooks/useReveal.js'
 import { PROYECTOS } from '../data/projects.js'
-import './Projects.css'
 
 function ProjectCard({ mono, tag, name, text, tech }) {
-  const ref = useReveal()
   return (
-    <article className="project reveal" ref={ref}>
+    <article className="project reveal">
       <div className="project__visual" aria-hidden="true">
         {mono}
       </div>

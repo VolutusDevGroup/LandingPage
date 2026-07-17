@@ -1,5 +1,3 @@
-import './Nav.css'
-
 const LINKS = [
   ['#quienes-somos', 'Quiénes Somos'],
   ['#servicios', 'Servicios'],
