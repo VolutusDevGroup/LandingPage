@@ -5,6 +5,8 @@
 Volutus es una landing page de una sola página. Todo el contenido está en español.
 Contacto: dpenaylilloluhrs@gmail.com
 
+
+TODO("Actualizar según links reales")
 ## Secciones
 
 - [Inicio](https://example.com/): propuesta de valor y presentación del estudio
