@@ -1,8 +1,8 @@
-# Volatus, Principios de Desarrollo
+# Volutus, Principios de Desarrollo
 
 ## Objetivo
 
-Desarrollar una landing page para **Volatus**, una empresa tecnológica, priorizando rendimiento, calidad técnica, diseño y posicionamiento en buscadores.
+Desarrollar una landing page para **Volutus**, una empresa tecnológica, priorizando rendimiento, calidad técnica, diseño y posicionamiento en buscadores.
 
 Toda decisión de desarrollo debe justificarse en función de estos principios.
 
@@ -13,19 +13,20 @@ Toda decisión de desarrollo debe justificarse en función de estos principios.
 La implementación debe seguir tres pilares fundamentales, en este orden:
 
 1. **Simpleza del código**
+
    - Escribir el código más simple posible.
    - Evitar complejidad innecesaria.
    - Favorecer la legibilidad sobre la "inteligencia" del código.
    - No introducir abstracciones prematuras.
-
 2. **Destreza técnica**
+
    - Aplicar buenas prácticas de ingeniería.
    - Mantener una arquitectura limpia.
    - Priorizar mantenibilidad y escalabilidad.
    - Evitar duplicación de código (DRY).
    - Mantener componentes pequeños y reutilizables cuando aporte valor.
-
 3. **Buen gusto en el diseño**
+
    - Diseño moderno, limpio y profesional.
    - Excelente jerarquía visual.
    - Espacios consistentes.
@@ -174,6 +175,7 @@ Todo el código generado debe cumplir con:
 - Sin errores del linter.
 - Sin errores de TypeScript.
 - Sin deuda técnica evitable.
+- Énfasis en la seguridad del sitio y sus componentes
 
 ---
 

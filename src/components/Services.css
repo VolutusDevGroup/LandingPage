@@ -1,70 +1,55 @@
-/* La sección de servicios es full-bleed: sin card, con una iluminación
-   azul "de estudio" — resplandor radial que emana desde el piso, bajo
-   el prisma, sobre un fondo que cae a negro. */
 .services {
-  /* Stack (section--overlap) monta sobre el final de esta sección. Solo
-     se recorta en X (la barra plana del prisma desborda el viewport);
-     en Y el resplandor del piso (.prism::before) debe poder extenderse
-     más allá de la sección, detrás de la card del stack. clip (a
-     diferencia de hidden) permite recortar un solo eje sin convertir
-     la sección en scroll container. */
-  padding-bottom: clamp(6rem, 10vw, 9rem);
-  overflow-x: clip;
+  padding: 64px 0;
 }
 
-.services__studio {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    /* foco principal: piso iluminado en la mitad baja de la sección
-       (el resplandor intenso pegado al prisma lo pinta .prism::before) */
-    radial-gradient(
-      ellipse 60% 42% at 50% 80%,
-      rgba(37, 99, 235, 0.35),
-      rgba(23, 58, 160, 0.15) 48%,
-      transparent 72%
-    ),
-    /* relleno ambiental superior, muy tenue */
-    radial-gradient(
-      ellipse 70% 40% at 50% 15%,
-      rgba(61, 139, 255, 0.08),
-      transparent 70%
-    ),
-    /* telón que oscurece hacia negro de estudio */
-    linear-gradient(180deg, transparent, #020409 30%, #020409 70%, transparent);
-  /* La luz respira y el scroll la aviva (--energy la escribe CircuitBackground) */
-  opacity: calc(0.75 + var(--energy) * 0.25);
-  transition: opacity 0.4s ease;
-  animation: services-studio 8s ease-in-out infinite;
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  background: var(--color-bg);
+  border: 2px solid var(--color-divider);
 }
 
-@keyframes services-studio {
-  0%,
-  100% {
-    filter: brightness(0.85);
-  }
-  50% {
-    filter: brightness(1.1);
-  }
+.services__intro,
+.services__card {
+  padding: 28px 24px;
+  box-shadow: inset -1px -1px 0 var(--color-divider);
 }
 
-/* Los resplandores infinitos (telón de estudio y piso del prisma) se pausan
-   cuando la sección sale del viewport (usePauseWhenHidden agrega
-   is-offscreen): animan filter, que es caro de componer, y no se ven. */
-.services.is-offscreen .services__studio,
-.services.is-offscreen .prism::before {
-  animation-play-state: paused;
+.services__titulo {
+  font-size: 28px;
+  line-height: 1.1;
+  margin: 0 0 12px;
 }
 
-.services__header {
-  position: relative;
-  z-index: 1;
-  text-align: center;
+.services__lead {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-neutral-700);
 }
 
-.services__header .section__title,
-.services__header .section__lead {
-  margin-inline: auto;
+.services__card {
+  transition: background-color 0.25s var(--ease-out);
+}
+
+.services__card:hover {
+  background: var(--color-accent-100);
+}
+
+.services__icon {
+  color: var(--color-accent);
+  display: block;
+  margin-bottom: 14px;
+}
+
+.services__card-titulo {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.services__card-texto {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-neutral-700);
 }

@@ -1,27 +1,136 @@
-.about__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: 1.25rem;
-  margin-top: 2.5rem;
+.about {
+  padding: 64px 0;
 }
 
-.about__card-title {
-  font-size: 1.15rem;
+.about__titulo {
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.08;
+  margin: 0 0 16px;
+  max-width: 24ch;
+}
+
+.about__lead {
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 58ch;
+  color: var(--color-neutral-700);
+  margin: 0 0 48px;
+}
+
+/* Selector de tabs con indicador deslizante */
+.about__tablist {
+  position: relative;
   display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--color-divider);
+  margin-bottom: 32px;
+}
+
+.about__tab-indicador {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transition:
+    transform 0.4s var(--ease-out),
+    width 0.4s var(--ease-out);
+}
+
+.about__tab {
+  flex: none;
+  padding: 12px 4px;
+  margin-right: 28px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  color: var(--color-neutral-600);
+  cursor: pointer;
+  transition: color 0.3s var(--ease-out);
+}
+
+.about__tab:hover {
+  color: var(--color-text);
+}
+
+.about__tab.is-activa {
+  color: var(--color-text);
+  cursor: default;
+}
+
+.about__numero {
+  margin-right: 8px;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--color-neutral-600);
+}
+
+.about__tab.is-activa .about__numero {
+  color: var(--color-accent);
+}
+
+/* Paneles en pista horizontal: al cambiar de tab, la pista se desliza */
+.about__panels {
+  overflow: hidden;
+}
+
+.about__track {
+  display: flex;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.about__panel {
+  flex: 0 0 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
   align-items: center;
-  gap: 0.6rem;
 }
 
-.about__card-title::before {
-  content: '';
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 2px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 10px var(--glow);
+@media (prefers-reduced-motion: reduce) {
+  .about__track {
+    transition: none;
+  }
 }
 
-.about__card-text {
-  color: var(--text-muted);
-  margin: 0;
+.about__panel-img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+
+.about__panel-titulo {
+  font-size: 24px;
+  margin: 0 0 12px;
+}
+
+.about__panel-texto {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-neutral-700);
+}
+
+@media (max-width: 640px) {
+  .about__tab {
+    margin-right: 14px;
+    padding: 10px 2px;
+    font-size: 13px;
+  }
+
+  .about__numero {
+    margin-right: 4px;
+  }
+
+  .about__panel {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .about__panel-img {
+    height: 200px;
+  }
 }

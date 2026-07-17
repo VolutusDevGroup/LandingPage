@@ -1,88 +1,58 @@
-.contact__panel {
+.contact__grid {
   display: grid;
-  gap: 2.5rem;
-  padding: clamp(1.75rem, 4vw, 3rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
 }
 
-@media (min-width: 860px) {
-  .contact__panel {
-    grid-template-columns: 1fr 1.1fr;
-    gap: 4rem;
-  }
+.contact__panel {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  padding: 72px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
 }
 
-.contact__panel:hover {
-  /* El panel de contacto no necesita el hover de .card */
-  border-color: var(--border);
-  box-shadow: none;
+.contact__eyebrow {
+  margin: 0 0 16px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.contact__direct {
-  color: var(--text-muted);
-  font-size: 0.95rem;
+.contact__titulo {
+  font-size: clamp(36px, 4.5vw, 64px);
+  line-height: 1.02;
 }
 
-.contact__direct a {
-  color: var(--accent-2);
-  text-decoration-color: rgba(34, 211, 238, 0.4);
+.contact__intro {
+  margin: 0 0 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 40ch;
+}
+
+.contact__email {
+  color: var(--color-bg);
+  font-size: 15px;
+  text-underline-offset: 3px;
 }
 
 .contact__form {
-  display: grid;
-  gap: 1.15rem;
-}
-
-.contact__field {
-  display: grid;
-  gap: 0.4rem;
-}
-
-.contact__label {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.contact__input {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 0.65rem;
-  background: rgba(5, 7, 11, 0.6);
-  color: var(--text);
-  font: inherit;
-  transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.contact__input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(61, 139, 255, 0.18);
-}
-
-.contact__input[aria-invalid='true'] {
-  border-color: #ff7a8a;
-}
-
-.contact__input--area {
-  resize: vertical;
-  min-height: 7rem;
-}
-
-.contact__error {
-  margin: 0;
-  font-size: 0.85rem;
-  color: #ff9aa7; /* ≥ 4.5:1 sobre --surface */
+  padding: 72px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
 }
 
 .contact__submit {
-  justify-self: start;
+  align-self: flex-start;
 }
 
 .contact__status {
   margin: 0;
   min-height: 1.4em;
-  font-size: 0.9rem;
-  color: var(--accent-2);
+  font-size: 13px;
+  color: var(--color-accent);
 }

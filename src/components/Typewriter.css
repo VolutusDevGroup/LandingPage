@@ -1,0 +1,33 @@
+.typewriter {
+  display: inline-grid;
+  color: var(--color-accent);
+}
+
+.typewriter > span {
+  grid-area: 1 / 1;
+}
+
+.typewriter__sizer {
+  visibility: hidden;
+}
+
+.typewriter__cursor {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.85em;
+  margin-left: 0.08em;
+  background: currentColor;
+  animation: typewriter-blink 1.1s step-end infinite;
+}
+
+@keyframes typewriter-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter__cursor {
+    animation: none;
+  }
+}
