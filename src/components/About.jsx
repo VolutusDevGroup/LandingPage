@@ -76,8 +76,6 @@ export default function About() {
     evento.preventDefault()
   }
 
-  const pilar = PILARES[activo]
-
   return (
     <section
       id="quienes-somos"
@@ -118,26 +116,36 @@ export default function About() {
             ))}
           </div>
 
-          <div
-            key={pilar.numero}
-            id={`panel-${pilar.numero}`}
-            role="tabpanel"
-            aria-labelledby={`tab-${pilar.numero}`}
-            tabIndex={0}
-            className="about__panel"
-          >
-            <img
-              className="about__panel-img"
-              src={pilar.imagen.src}
-              alt={pilar.imagen.alt}
-              width={pilar.imagen.width}
-              height={pilar.imagen.height}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="about__panel-body">
-              <h3 className="about__panel-titulo">{pilar.titulo}</h3>
-              <p className="about__panel-texto">{pilar.texto}</p>
+          <div className="about__panels">
+            <div
+              className="about__track"
+              style={{ transform: `translateX(-${activo * 100}%)` }}
+            >
+              {PILARES.map((p, i) => (
+                <div
+                  key={p.numero}
+                  id={`panel-${p.numero}`}
+                  role="tabpanel"
+                  aria-labelledby={`tab-${p.numero}`}
+                  tabIndex={i === activo ? 0 : -1}
+                  inert={i !== activo}
+                  className="about__panel"
+                >
+                  <img
+                    className="about__panel-img"
+                    src={p.imagen.src}
+                    alt={p.imagen.alt}
+                    width={p.imagen.width}
+                    height={p.imagen.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="about__panel-body">
+                    <h3 className="about__panel-titulo">{p.titulo}</h3>
+                    <p className="about__panel-texto">{p.texto}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

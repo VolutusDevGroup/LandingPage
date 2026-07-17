@@ -73,25 +73,27 @@
   color: var(--color-accent);
 }
 
-/* Panel de contenido: imagen + texto, con transición al cambiar de tab */
+/* Paneles en pista horizontal: al cambiar de tab, la pista se desliza */
+.about__panels {
+  overflow: hidden;
+}
+
+.about__track {
+  display: flex;
+  transition: transform 0.5s var(--ease-out);
+}
+
 .about__panel {
+  flex: 0 0 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
   align-items: center;
-  animation: about-panel-in 0.5s var(--ease-out);
 }
 
-@keyframes about-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.98);
-    filter: blur(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
+@media (prefers-reduced-motion: reduce) {
+  .about__track {
+    transition: none;
   }
 }
 
