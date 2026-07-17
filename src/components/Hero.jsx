@@ -33,14 +33,17 @@ export default function Hero() {
           <figure className="hero__figure">
             <img
               className="hero__image"
-              src="/image/Michael-Zupanc.jpg"
+              src="/image/hero-volutus-1000.webp"
+              srcSet="/image/hero-volutus-640.webp 640w, /image/hero-volutus-1000.webp 1000w"
+              sizes="(max-width: 900px) 100vw, 720px"
               alt="Nube volutus: una onda continua cruzando el cielo"
               width="1000"
               height="667"
               fetchPriority="high"
             />
             <figcaption className="hero__caption">
-              A Beechcraft Bonanza (from Savannah Aviation) taking tourists on a scenic flight along a Morning Glory Cloud, near Burketown in North Queensland, Australia. © Michael Zupanc
+              Nube volutus <i>(Morning Glory)</i> sobre Burketown, Queensland,
+              Australia. Fotografía: © Michael Zupanc.
             </figcaption>
           </figure>
         </div>

@@ -1,11 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /*.json$
-Disallow: /private/
 
-# Velocidad de rastreo
-Crawl-delay: 1
-
-# Sitemap - actualizar con dominio real en producción
+# TODO: reemplazar por el dominio real al hacer deploy
 Sitemap: https://example.com/sitemap.xml

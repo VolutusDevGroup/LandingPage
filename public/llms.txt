@@ -1,0 +1,33 @@
+# Volutus
+
+> Estudio de ingeniería de software: desarrollo web, apps móviles, backend, APIs, cloud, inteligencia artificial y DevOps. Calidad de nivel empresarial, rendimiento medible y seguridad por diseño.
+
+Volutus es una landing page de una sola página. Todo el contenido está en español.
+Contacto: dpenaylilloluhrs@gmail.com
+
+## Secciones
+
+- [Inicio](https://example.com/): propuesta de valor y presentación del estudio
+- [Quiénes Somos](https://example.com/#quienes-somos): misión, visión y filosofía de trabajo
+- [Servicios](https://example.com/#servicios): frontend, backend, infraestructura y automatización con IA
+- [Proyectos](https://example.com/#proyectos): sistemas reales en producción
+- [Contacto](https://example.com/#contacto): formulario y correo del equipo
+
+## Servicios
+
+- Frontend: React, Next.js, TypeScript, Astro, Vite
+- Mobile: Kotlin, Jetpack Compose, Material 3
+- Backend: Node.js, Python, Spring Boot
+- Datos: PostgreSQL, MySQL, MongoDB, Supabase
+- Cloud: AWS, Google Cloud, Azure, Vercel, Firebase
+- DevOps: Docker, Kubernetes, GitHub Actions
+- IA: integración de LLMs (Gemini, Claude, ChatGPT) y agentes
+
+## Proyectos
+
+- CarFlip: agregador de avisos de autos en venta en Chile con historial de precios y detección de oportunidades (Python, PostgreSQL, AWS, Astro)
+- Agente IA HelpDesk: clasificación automática de tickets de correo con IA e informes ejecutivos (Python, Gemini API)
+- LapMaster: app Android de cronometraje de pista multi-piloto con GPS y clima en vivo (Kotlin, Jetpack Compose)
+- beatrizberger.cl: sitio literario con optimización total de performance y SEO, Lighthouse móvil ≥ 95 (React, Vite)
+- Prospector Places: extracción masiva de negocios vía Google Places API con análisis bayesiano de reseñas (Python)
+- RepoBase BPL: base SaaS reutilizable con reservas, pagos y panel admin (Next.js, TypeScript, Supabase, Mercado Pago)

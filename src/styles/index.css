@@ -1,14 +1,22 @@
+/* ============ Tipografía auto-hospedada ============ */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/archivo-latin.woff2') format('woff2');
+}
+
 /* ============ Tokens (Modernist DS, retema "cielo") ============ */
 :root {
-  --color-bg: #ffffff
-  ;
+  --color-bg: #ffffff;
   --color-surface: #e9f0f6;
   --color-text: #17242f;
   --color-accent: #1a5f9e;
   --color-divider: color-mix(in srgb, #17242f 40%, transparent);
 
   --color-neutral-100: #f6f9fb;
-  --color-neutral-600: #758593;
+  --color-neutral-600: #5f6e79;
   --color-neutral-700: #586873;
   --color-neutral-800: #3d4a54;
 
