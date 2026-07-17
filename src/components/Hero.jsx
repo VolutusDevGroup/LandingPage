@@ -30,20 +30,20 @@ export default function Hero() {
           </div>
 
           <figure className="hero__figure">
-            <img
-              className="hero__image"
-              src="/image/hero-volutus-1000.webp"
-              srcSet="/image/hero-volutus-640.webp 640w, /image/hero-volutus-1000.webp 1000w"
-              sizes="(max-width: 900px) 100vw, 720px"
-              alt="Nube volutus: una onda continua cruzando el cielo"
-              width="1000"
-              height="667"
-              fetchPriority="high"
-            />
-            <figcaption className="hero__caption">
-              Nube volutus <i>(Morning Glory)</i> sobre Burketown, Queensland,
-              Australia. Fotografía: © Michael Zupanc.
-            </figcaption>
+            <video
+              className="hero__video"
+              poster="/image/hero-volutus-poster.webp"
+              width="960"
+              height="538"
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+            >
+              <source src="/videos/hero-volutus.webm" type="video/webm" />
+              <source src="/videos/hero-volutus.mp4" type="video/mp4" />
+            </video>
           </figure>
         </div>
       </div>

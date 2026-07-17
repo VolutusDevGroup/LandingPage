@@ -4,7 +4,8 @@ Landing page de Volutus, construida con React y Vite, con pre-renderizado estát
 
 [Diseño de referencia en Canva](https://www.canva.com/design/DAHPg0F3exU/gsNlD7AkpXAVVIyV5ObjTQ/edit?ui=eyJFIjp7Im0iOnRydWUsIkE_IjoibiJ9LCJLIjp7IkEiOiIyYTZiZDgyMy1mY2UyLTRlYTMtYTdmMi1kMTM0OTA2N2RhMDEifX0)
 
-![1784174150425](image/README/1784174150425.png)![1784174195927](image/README/1784174195927.png)
+![1784330479927](image/README/1784330479927.png)
+
 
 ## Stack
 

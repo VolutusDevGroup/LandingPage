@@ -43,6 +43,16 @@ function initTypewriter() {
   tick()
 }
 
+// Sin JS o con reduced-motion, el <video> se queda en su poster (prerenderizado
+// sin autoplay a propósito). Recién acá se decide si reproducirlo.
+function initHeroVideo() {
+  const video = document.querySelector('.hero__video')
+  if (!video) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+  video.play().catch(() => {})
+}
+
 // Agrega .is-visible cuando el elemento entra al viewport. La animación
 // vive en CSS (.reveal) y respeta prefers-reduced-motion.
 function initReveal() {
@@ -198,6 +208,7 @@ function initAnalytics() {
 
 export default function init() {
   initTypewriter()
+  initHeroVideo()
   initReveal()
   initTabs()
   initContacto()
