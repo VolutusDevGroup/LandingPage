@@ -1,10 +1,14 @@
+.footer {
+  background: var(--color-surface);
+  overflow: hidden;
+}
+
 .footer__inner {
-  padding-block: 48px 24px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px 64px;
-  justify-content: space-between;
-  align-items: flex-start;
+  padding-block: 64px 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 40px 80px;
+  align-items: start;
 }
 
 .footer__logo {
@@ -23,29 +27,42 @@
   background: var(--color-accent);
 }
 
-.footer__tagline {
-  margin: 8px 0 0;
-  font-size: 13px;
-  color: var(--color-neutral-600);
-  max-width: 28ch;
+.footer__about {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-neutral-700);
+  max-width: 44ch;
 }
 
-.footer__nav,
-.footer__social {
+.footer__stack {
+  margin: 14px 0 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-neutral-600);
+}
+
+.footer__col {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 10px;
 }
 
-.footer__social {
-  flex-direction: row;
-  gap: 24px;
+.footer__heading {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-neutral-600);
 }
 
 .footer__link {
   color: var(--color-neutral-700);
   text-decoration: none;
   font-size: 14px;
+  overflow-wrap: anywhere;
   transition: color 0.25s var(--ease-out);
 }
 
@@ -68,4 +85,37 @@
   margin: 0;
   font-size: 12px;
   color: var(--color-neutral-600);
+}
+
+/* Sangrado inferior: el margen negativo empuja la mitad baja de las letras
+   fuera del footer y overflow:hidden (en .footer) las recorta. */
+.footer__wordmark {
+  margin: 16px 0 -0.42em;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(76px, 26vw, 380px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-align: center;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  user-select: none;
+}
+
+@media (max-width: 900px) {
+  .footer__inner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 64px;
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
 }

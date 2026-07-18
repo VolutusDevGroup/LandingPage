@@ -1,12 +1,10 @@
+const CONTACT_EMAIL = 'dpenaylilloluhrs@gmail.com'
+
 const LINKS = [
   ['#quienes-somos', 'Quiénes Somos'],
   ['#servicios', 'Servicios'],
   ['#proyectos', 'Proyectos'],
   ['#contacto', 'Contacto'],
-]
-
-const SOCIAL = [
-  ['https://github.com/VolutusDevGroup', 'GitHub']
 ]
 
 function GithubIcon() {
@@ -27,17 +25,23 @@ export default function Footer() {
   return (
     <footer className="footer section-divider">
       <div className="footer__inner container">
-        <div>
+        <div className="footer__brand">
           <p className="footer__logo">
             <span className="footer__logo-mark" aria-hidden="true" />
             Volutus
           </p>
-          <p className="footer__tagline">
-            Soluciones simples para tu negocio.
+          <p className="footer__about">
+            Estudio de ingeniería de software: web, mobile, backend, cloud e
+            IA. Construimos software confiable que resuelve problemas reales,
+            con la calidad de un equipo grande y la cercanía de uno pequeño.
+          </p>
+          <p className="footer__stack">
+            Web · Mobile · Backend · Cloud · IA · DevOps
           </p>
         </div>
 
-        <nav className="footer__nav" aria-label="Pie de página">
+        <nav className="footer__col" aria-label="Pie de página">
+          <p className="footer__heading">Navegación</p>
           {LINKS.map(([href, label]) => (
             <a key={href} className="footer__link" href={href}>
               {label}
@@ -45,25 +49,32 @@ export default function Footer() {
           ))}
         </nav>
 
-        <div className="footer__social">
-          {SOCIAL.map(([href, label]) => (
-            <a
-              key={label}
-              className="footer__link footer__social-link"
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <GithubIcon />
-              {label}
-            </a>
-          ))}
+        <div className="footer__col">
+          <p className="footer__heading">Contacto</p>
+          <a className="footer__link" href={`mailto:${CONTACT_EMAIL}`}>
+            {CONTACT_EMAIL}
+          </a>
+          <a
+            className="footer__link footer__social-link"
+            href="https://github.com/VolutusDevGroup"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <GithubIcon />
+            GitHub
+          </a>
+          <a className="footer__link" href="#contenido">
+            <span aria-hidden="true">↑ </span>
+            Volver arriba
+          </a>
         </div>
       </div>
 
       <div className="footer__bottom container">
         <p>© {new Date().getFullYear()} Volutus. Todos los derechos reservados.</p>
       </div>
+
+      <p className="footer__wordmark" aria-hidden="true">Volutus</p>
     </footer>
   )
 }

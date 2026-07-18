@@ -1,4 +1,4 @@
-// Presentacional: la validación y el envío por mailto corren en el
+// Presentacional: la validación y el envío del formulario corren en el
 // cliente (src/client.js).
 const CONTACT_EMAIL = 'dpenaylilloluhrs@gmail.com'
 
@@ -55,6 +55,16 @@ export default function Contact() {
           {field('name', 'Nombre')}
           {field('email', 'Correo electrónico', 'email')}
           {field('message', '¿Qué necesitas construir?', 'textarea')}
+          <div className="contact__hp" aria-hidden="true">
+            <label htmlFor="contact-website">Sitio web</label>
+            <input
+              id="contact-website"
+              type="text"
+              name="website"
+              tabIndex="-1"
+              autoComplete="off"
+            />
+          </div>
           <button className="btn btn-primary contact__submit" type="submit">
             Enviar mensaje
           </button>

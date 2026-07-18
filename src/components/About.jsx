@@ -1,8 +1,22 @@
 // Presentacional: renderiza el primer pilar activo; la interacción de las
 // tabs (click, teclado, indicador) corre en el cliente (src/client.js).
 const PILARES = [
-  {
+  {  
+    
     numero: '01',
+    titulo: 'Historia',
+    // TODO: reemplazar por la historia real de Volutus.
+    texto:
+      'Nuestra historia está en construcción: pronto contaremos de dónde viene Volutus y hacia dónde va.',
+    imagen: {
+      src: '/image/hero-volutus-poster.webp',
+      alt: 'Nube volutus alargada y cilíndrica cruzando baja sobre el horizonte',
+      width: 960,
+      height: 538,
+    },
+  },
+  {
+    numero: '02',
     titulo: 'Misión',
     texto:
       'Construir software confiable que resuelva problemas reales de negocio, con la calidad de un equipo grande y la cercanía de uno pequeño.',
@@ -16,7 +30,7 @@ const PILARES = [
     },
   },
   {
-    numero: '02',
+    numero: '03',
     titulo: 'Visión',
     texto:
       'Ser el equipo al que se recurre cuando el software tiene que funcionar bien desde el primer día — y seguir en el aire sin sorpresas.',
@@ -30,7 +44,7 @@ const PILARES = [
     },
   },
   {
-    numero: '03',
+    numero: '04',
     titulo: 'Filosofía',
     texto:
       'Dependencias mínimas, rendimiento medible y seguridad por diseño. Como la volutus: nada sobra, y por eso vuela.',
@@ -42,7 +56,8 @@ const PILARES = [
       width: 640,
       height: 427,
     },
-  },
+  }
+
 ]
 
 export default function About() {
@@ -99,7 +114,10 @@ export default function About() {
                     className="about__panel-img"
                     src={p.imagen.src}
                     srcSet={p.imagen.srcSet}
-                    sizes="(max-width: 640px) 100vw, min(620px, calc(50vw - 40px))"
+                    sizes={
+                      p.imagen.srcSet &&
+                      '(max-width: 640px) 100vw, min(620px, calc(50vw - 40px))'
+                    }
                     alt={p.imagen.alt}
                     width={p.imagen.width}
                     height={p.imagen.height}

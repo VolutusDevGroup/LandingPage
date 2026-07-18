@@ -126,6 +126,38 @@ function initTabs() {
   document.fonts.ready.then(medirIndicador)
 }
 
+// Al pasar el cursor, la banda de servicios desacelera suavemente hasta
+// detenerse y vuelve a acelerar al salir, en vez de frenar en seco. Se modula
+// la velocidad de la animación CSS con la Web Animations API; updatePlaybackRate
+// sincroniza la posición para que el cambio de ritmo no produzca saltos.
+function initServicesMarquee() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const marquee = document.querySelector('.services__marquee')
+  const track = document.querySelector('.services__track')
+  if (!marquee || !track) return
+  const animacion = track.getAnimations()[0]
+  if (!animacion) return
+
+  const RAMPA_MS = 600
+  let rafId = 0
+
+  function acelerarHacia(objetivo) {
+    cancelAnimationFrame(rafId)
+    const inicio = animacion.playbackRate
+    const t0 = performance.now()
+    function paso(ahora) {
+      const t = Math.min(1, (ahora - t0) / RAMPA_MS)
+      const suave = t * (2 - t) // easeOut: rápido al inicio, se asienta al final
+      animacion.updatePlaybackRate(inicio + (objetivo - inicio) * suave)
+      if (t < 1) rafId = requestAnimationFrame(paso)
+    }
+    rafId = requestAnimationFrame(paso)
+  }
+
+  marquee.addEventListener('pointerenter', () => acelerarHacia(0))
+  marquee.addEventListener('pointerleave', () => acelerarHacia(1))
+}
+
 const CONTACT_EMAIL = 'dpenaylilloluhrs@gmail.com'
 
 const VALIDADORES = {
@@ -160,16 +192,17 @@ function setError(input, mensaje) {
   input.setAttribute('aria-describedby', id)
 }
 
-// Sitio estático sin backend: el envío abre el cliente de correo
-// con el mensaje ya redactado.
+// Sitio estático: el envío llega a /api/contact (función serverless de
+// Vercel), que reenvía el mensaje por mail vía Resend.
 function initContacto() {
   const form = document.querySelector('.contact__form')
   if (!form) return
   const status = form.querySelector('.contact__status')
+  const submit = form.querySelector('.contact__submit')
 
   form.addEventListener('input', (evento) => setError(evento.target, ''))
 
-  form.addEventListener('submit', (evento) => {
+  form.addEventListener('submit', async (evento) => {
     evento.preventDefault()
     status.textContent = ''
 
@@ -181,14 +214,29 @@ function initContacto() {
     }
     if (!valido) return
 
-    const { name, email, message } = form.elements
-    const subject = encodeURIComponent(`Contacto desde la web — ${name.value}`)
-    const body = encodeURIComponent(
-      `${message.value}\n\n— ${name.value} (${email.value})`,
-    )
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`
-    status.textContent =
-      'Se abrió tu cliente de correo con el mensaje listo para enviar.'
+    const { name, email, message, website } = form.elements
+    submit.disabled = true
+    status.textContent = 'Enviando…'
+
+    try {
+      const respuesta = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.value,
+          email: email.value,
+          message: message.value,
+          website: website.value,
+        }),
+      })
+      if (!respuesta.ok) throw new Error('request-failed')
+      form.reset()
+      status.textContent = 'Mensaje enviado. Te responderemos pronto.'
+    } catch {
+      status.textContent = `No pudimos enviar el mensaje. Escríbenos directo a ${CONTACT_EMAIL}.`
+    } finally {
+      submit.disabled = false
+    }
   })
 }
 
@@ -211,6 +259,7 @@ export default function init() {
   initHeroVideo()
   initReveal()
   initTabs()
+  initServicesMarquee()
   initContacto()
   if (import.meta.env.PROD) initAnalytics()
 }

@@ -170,8 +170,9 @@
     font-size: 13px;
   }
 
+  /* Con cuatro tabs los números ya no caben en una fila de 320-390px. */
   .about__numero {
-    margin-right: 4px;
+    display: none;
   }
 
   .about__panel {

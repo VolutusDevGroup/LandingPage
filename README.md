@@ -26,8 +26,14 @@ En producción **React no se envía al navegador**. El script de build:
 
 El único JS que llega al cliente es `src/client.js` (vanilla), que engancha
 sobre el HTML prerenderizado: typewriter del hero, reveal on-scroll, tabs de
-"Quiénes Somos", validación del formulario (envío por `mailto:`) y Vercel Web
-Analytics vía snippet oficial (sin paquete npm).
+"Quiénes Somos", validación y envío del formulario (POST a `/api/contact`) y
+Vercel Web Analytics vía snippet oficial (sin paquete npm).
+
+El formulario de contacto lo procesa `api/contact.js`, una función
+serverless de Vercel que reenvía el mensaje por mail vía
+[Resend](https://resend.com) (requiere la variable de entorno
+`RESEND_API_KEY` configurada en el proyecto de Vercel). Incluye un campo
+honeypot oculto como filtro básico contra spam automatizado.
 
 En desarrollo el root llega vacío y React monta la App en el navegador
 (`src/dev.jsx`); Vite elimina ese bloque del bundle de producción.
@@ -45,6 +51,8 @@ pnpm preview       # previsualizar el build
 
 ```
 index.html              # shell HTML: meta SEO, Open Graph, JSON-LD, preload de fuente
+api/
+  contact.js            # función serverless (Vercel): envía el formulario vía Resend
 scripts/
   prerender.mjs         # inyecta el HTML prerenderizado e inlinea el CSS
 src/
