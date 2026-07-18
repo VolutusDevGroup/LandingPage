@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm -v)",
+      "Bash(corepack -v)",
+      "Bash(corepack enable *)",
+      "Bash(corepack prepare *)",
+      "Bash(npx --yes pnpm@latest -v)",
+      "Bash(npx --yes pnpm@latest install)",
+      "Bash(npx --yes pnpm@latest dev)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5174/)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:claudemarketplaces.com)",
+      "Bash(npx -y skills@latest --help)",
+      "Bash(npx -y skills@latest add anthropics/skills --list)",
+      "Bash(npx -y skills@latest add vercel-labs/agent-skills --list)",
+      "Bash(npx -y skills@latest add nextlevelbuilder/ui-ux-pro-max-skill --list)",
+      "Bash(npx -y skills@latest add alchaincyf/huashu-design --list)",
+      "Bash(npx -y skills@latest add emilkowalski/skills --list)",
+      "Bash(npx -y skills@latest add anthropics/skills --skill frontend-design --agent claude-code -y)",
+      "Bash(npx -y skills@latest add nextlevelbuilder/ui-ux-pro-max-skill --skill ui-ux-pro-max --agent claude-code -y)",
+      "Bash(npx -y skills@latest add alchaincyf/huashu-design --skill huashu-design --agent claude-code -y)",
+      "Bash(npx -y skills@latest add emilkowalski/skills --skill '*' --agent claude-code -y)",
+      "Bash(npx -y skills@latest add vercel-labs/agent-skills --skill web-design-guidelines vercel-react-best-practices --agent claude-code -y)",
+      "Bash(npx -y skills@latest list --agent claude-code)",
+      "Bash(git checkout *)",
+      "Bash(npx -y skills@latest find \"clone component website\")",
+      "Bash(npx -y skills@latest find \"playwright\")",
+      "Bash(npx -y skills@latest add julianromli/ai-skills --list)",
+      "Bash(npx -y skills@latest add microsoft/playwright-cli --list)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(gh api *)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(npx -y skills@latest add julianromli/ai-skills --skill clone-website --agent claude-code -y)",
+      "Bash(claude mcp *)",
+      "Bash(git mv *)"
+    ]
+  }
+}
