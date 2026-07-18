@@ -43,6 +43,78 @@ function initTypewriter() {
   tick()
 }
 
+// El nav es fixed y transparente sobre el hero; se vuelve sólido apenas
+// se hace scroll para no perder contraste sobre el resto de las secciones.
+function initNavScroll() {
+  const nav = document.querySelector('.nav')
+  if (!nav) return
+
+  let ticking = false
+  function actualizar() {
+    nav.classList.toggle('nav--solid', window.scrollY > 40)
+    ticking = false
+  }
+
+  actualizar()
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(actualizar)
+    },
+    { passive: true },
+  )
+}
+
+// Panel off-canvas del nav en móvil (≤ 640px). En escritorio el botón
+// permanece oculto por CSS y este código nunca se ejecuta.
+function initNavToggle() {
+  const boton = document.querySelector('.nav__toggle')
+  const panel = document.querySelector('.nav__links')
+  if (!boton || !panel) return
+
+  const esMobile = window.matchMedia('(max-width: 640px)')
+
+  // Fuera de este breakpoint el panel vive en el flujo normal del nav
+  // y siempre debe ser interactivo: inert solo aplica al panel off-canvas.
+  function actualizarInert() {
+    panel.inert = esMobile.matches && !panel.classList.contains('is-open')
+  }
+
+  function cerrar() {
+    boton.setAttribute('aria-expanded', 'false')
+    panel.classList.remove('is-open')
+    actualizarInert()
+  }
+
+  function alternar() {
+    const abierto = panel.classList.toggle('is-open')
+    boton.setAttribute('aria-expanded', String(abierto))
+    actualizarInert()
+  }
+
+  esMobile.addEventListener('change', actualizarInert)
+  actualizarInert()
+
+  boton.addEventListener('click', alternar)
+  panel.addEventListener('click', (evento) => {
+    if (evento.target.closest('a')) cerrar()
+  })
+  document.addEventListener('click', (evento) => {
+    if (
+      panel.classList.contains('is-open') &&
+      !panel.contains(evento.target) &&
+      !boton.contains(evento.target)
+    ) {
+      cerrar()
+    }
+  })
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape') cerrar()
+  })
+}
+
 // El autoplay del video de fondo también es movimiento: se detiene en el
 // primer frame (el poster) si el usuario prefiere movimiento reducido.
 function initHeroVideo() {
@@ -209,6 +281,8 @@ function initAnalytics() {
 
 export default function init() {
   initTypewriter()
+  initNavScroll()
+  initNavToggle()
   initHeroVideo()
   initReveal()
   initTabs()

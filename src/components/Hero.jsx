@@ -1,6 +1,6 @@
 import Typewriter from './Typewriter'
 
-const PALABRAS = ['soluciones', 'resultados', 'respuestas']
+const PALABRAS = ['problemas', 'excusas', 'atajos']
 
 export default function Hero() {
   return (
@@ -18,9 +18,11 @@ export default function Hero() {
       <div className="hero__scrim" aria-hidden="true" />
       <div className="container hero__content">
         <h1 id="hero-titulo" className="hero__title reveal">
-          <span>No buscamos problemas, sino</span>
-          <span className="visually-hidden">soluciones</span>
-          <Typewriter words={PALABRAS} />
+          <span className="hero__title-line">Construimos soluciones, no</span>
+          <span className="visually-hidden">problemas</span>
+          <span className="hero__title-word">
+            <Typewriter words={PALABRAS} />
+          </span>
         </h1>
         <div className="hero__actions reveal">
           <a className="btn btn-primary" href="#contacto">
