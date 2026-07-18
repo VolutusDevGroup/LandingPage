@@ -43,6 +43,17 @@ function initTypewriter() {
   tick()
 }
 
+// El autoplay del video de fondo también es movimiento: se detiene en el
+// primer frame (el poster) si el usuario prefiere movimiento reducido.
+function initHeroVideo() {
+  const video = document.querySelector('.hero__video')
+  if (!video) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    video.removeAttribute('autoplay')
+    video.pause()
+  }
+}
+
 // Agrega .is-visible cuando el elemento entra al viewport. La animación
 // vive en CSS (.reveal) y respeta prefers-reduced-motion.
 function initReveal() {
@@ -198,6 +209,7 @@ function initAnalytics() {
 
 export default function init() {
   initTypewriter()
+  initHeroVideo()
   initReveal()
   initTabs()
   initContacto()

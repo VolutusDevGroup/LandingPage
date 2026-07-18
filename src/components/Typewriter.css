@@ -1,6 +1,6 @@
 .typewriter {
   display: inline-grid;
-  color: var(--color-accent);
+  color: color-mix(in srgb, var(--color-accent) 55%, white);
 }
 
 .typewriter > span {
