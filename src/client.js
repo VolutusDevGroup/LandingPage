@@ -129,8 +129,15 @@ function initHeroVideo() {
 // La rueda del mouse desplaza el carrousel en horizontal (igual que el
 // sitio de referencia) y también se puede arrastrar con el mouse.
 function initDevCarousel() {
-  const carrusel = document.querySelector('.dev-services__carousel')
+  const carrusel = document.querySelector('.vc-track')
   if (!carrusel) return
+
+  document.querySelector('.dev-services__prev')?.addEventListener('click', () => {
+    carrusel.scrollBy({ left: -360, behavior: 'smooth' })
+  })
+  document.querySelector('.dev-services__next')?.addEventListener('click', () => {
+    carrusel.scrollBy({ left: 360, behavior: 'smooth' })
+  })
 
   // Rueda vertical -> scroll horizontal, con inercia (lerp hacia un
   // objetivo) en vez de saltos instantáneos por cada tick: así se siente
