@@ -126,6 +126,124 @@ function initHeroVideo() {
   }
 }
 
+// La rueda del mouse desplaza el carrousel en horizontal (igual que el
+// sitio de referencia) y también se puede arrastrar con el mouse.
+function initDevCarousel() {
+  const carrusel = document.querySelector('.dev-services__carousel')
+  if (!carrusel) return
+
+  // Rueda vertical -> scroll horizontal, con inercia (lerp hacia un
+  // objetivo) en vez de saltos instantáneos por cada tick: así se siente
+  // deslizante y no rígido. Se libera en los extremos para no atrapar el
+  // scroll normal de la página. scroll-snap-type se desactiva mientras
+  // dura la animación: si no, el navegador "snapea" cada paso chico de
+  // vuelta al inicio antes de que se note.
+  const SUAVIZADO = 0.2 // 0-1: más alto = alcanza el objetivo más rápido
+  let objetivo = carrusel.scrollLeft
+  let animando = false
+
+  function paso() {
+    if (!animando) return // cancelado desde afuera (p.ej. el usuario agarró el carrousel)
+    const diferencia = objetivo - carrusel.scrollLeft
+    if (Math.abs(diferencia) < 0.5) {
+      carrusel.scrollLeft = objetivo
+      animando = false
+      carrusel.classList.remove('is-wheeling')
+      return
+    }
+    carrusel.scrollLeft += diferencia * SUAVIZADO
+    requestAnimationFrame(paso)
+  }
+
+  function iniciarInercia(destino) {
+    const maxScroll = carrusel.scrollWidth - carrusel.clientWidth
+    objetivo = Math.min(Math.max(destino, 0), maxScroll)
+    if (!animando) {
+      animando = true
+      carrusel.classList.add('is-wheeling')
+      requestAnimationFrame(paso)
+    }
+  }
+
+  carrusel.addEventListener(
+    'wheel',
+    (evento) => {
+      if (Math.abs(evento.deltaY) <= Math.abs(evento.deltaX)) return
+
+      // Si no hay inercia en curso, el objetivo parte de la posición real
+      // (por si el usuario arrastró o hizo scroll por otro medio antes).
+      if (!animando) objetivo = carrusel.scrollLeft
+
+      const maxScroll = carrusel.scrollWidth - carrusel.clientWidth
+      const enInicio = objetivo <= 0
+      const enFinal = objetivo >= maxScroll
+      if ((evento.deltaY < 0 && enInicio) || (evento.deltaY > 0 && enFinal)) return
+
+      evento.preventDefault()
+      iniciarInercia(objetivo + evento.deltaY)
+    },
+    { passive: false },
+  )
+
+  // Arrastrar con el mouse (clic y mover). El touch ya se desplaza nativo
+  // gracias a overflow-x + scroll-snap, así que esto solo aplica al mouse.
+  // La posición se aplica en requestAnimationFrame (no en cada pointermove)
+  // para que el trazo no dependa de la frecuencia del sensor del mouse, y
+  // al soltar se proyecta un envión con la velocidad reciente, frenado por
+  // el mismo loop de inercia de la rueda — así no se detiene en seco.
+  let arrastrando = false
+  let inicioX = 0
+  let inicioScroll = 0
+  let punteroX = 0
+  let ultimoX = 0
+  let ultimoTiempo = 0
+  let velocidadX = 0 // px/ms
+
+  function seguirPuntero() {
+    if (!arrastrando) return
+    carrusel.scrollLeft = inicioScroll - (punteroX - inicioX)
+    requestAnimationFrame(seguirPuntero)
+  }
+
+  carrusel.addEventListener('pointerdown', (evento) => {
+    if (evento.pointerType !== 'mouse') return
+    arrastrando = true
+    animando = false // corta cualquier inercia de la rueda en curso
+    carrusel.classList.remove('is-wheeling')
+    inicioX = evento.clientX
+    inicioScroll = carrusel.scrollLeft
+    punteroX = evento.clientX
+    ultimoX = evento.clientX
+    ultimoTiempo = evento.timeStamp
+    velocidadX = 0
+    carrusel.classList.add('is-dragging')
+    carrusel.setPointerCapture(evento.pointerId)
+    requestAnimationFrame(seguirPuntero)
+  })
+
+  carrusel.addEventListener('pointermove', (evento) => {
+    if (!arrastrando) return
+    punteroX = evento.clientX
+    const dt = evento.timeStamp - ultimoTiempo
+    if (dt > 0) {
+      velocidadX = (evento.clientX - ultimoX) / dt
+      ultimoX = evento.clientX
+      ultimoTiempo = evento.timeStamp
+    }
+  })
+
+  function soltar() {
+    if (!arrastrando) return
+    arrastrando = false
+    carrusel.classList.remove('is-dragging')
+    // Proyecta la velocidad al soltar como un envión chico; el mismo
+    // suavizado de la rueda se encarga de frenarlo.
+    iniciarInercia(carrusel.scrollLeft - velocidadX * 180)
+  }
+  carrusel.addEventListener('pointerup', soltar)
+  carrusel.addEventListener('pointercancel', soltar)
+}
+
 // Agrega .is-visible cuando el elemento entra al viewport. La animación
 // vive en CSS (.reveal) y respeta prefers-reduced-motion.
 function initReveal() {
@@ -284,6 +402,7 @@ export default function init() {
   initNavScroll()
   initNavToggle()
   initHeroVideo()
+  initDevCarousel()
   initReveal()
   initTabs()
   initContacto()

@@ -1,24 +1,5 @@
 import { SERVICIOS } from '../data/services.js'
-
-function ServiceIcon({ paths }) {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {paths.map((d) => (
-        <path key={d} d={d} />
-      ))}
-    </svg>
-  )
-}
+import Icon from './Icon.jsx'
 
 export default function Services() {
   return (
@@ -42,7 +23,7 @@ export default function Services() {
           {SERVICIOS.map((s) => (
             <div key={s.label} className="services__card">
               <span className="services__icon">
-                <ServiceIcon paths={s.paths} />
+                <Icon paths={s.paths} />
               </span>
               <h3 className="services__card-titulo">{s.label}</h3>
               <p className="services__card-texto">{s.items}</p>
