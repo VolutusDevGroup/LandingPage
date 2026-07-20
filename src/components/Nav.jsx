@@ -1,7 +1,6 @@
 const LINKS = [
   ['#quienes-somos', 'Quiénes Somos'],
-  ['#servicios', 'Servicios'],
-  ['#proyectos', 'Proyectos'],
+  ['#desarrollo', 'Servicios'],
 ]
 
 export default function Nav() {

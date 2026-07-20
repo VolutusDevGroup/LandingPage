@@ -1,7 +1,7 @@
 import { DESARROLLO } from '../data/desarrollo.js'
 
 // Estructura tal cual salió del diseño (Claude Design): header con eyebrow
-// "Volutus" + título "Servicios" + flechas, track horizontal con 3
+// "Proyectos Destacados" + título "Servicios reales, en producción" + flechas, track horizontal con 3
 // variantes de tarjeta (principal / ejemplo / video) e indicadores debajo.
 // Los estilos van inline porque así se definieron en el diseño original.
 // El contenido multimedia (imagePlaceholder) se genera después.
@@ -333,11 +333,11 @@ export default function ServicesCarousel() {
                   color: '#1a5f9e',
                 }}
               >
-                Volutus
+                Proyectos Destacados
               </span>
             </div>
             <h2 style={{ fontWeight: 800, fontSize: 36, letterSpacing: '-0.02em', lineHeight: 1.1, color: '#17242f', margin: 0 }}>
-              Servicios
+              Servicios reales, en producción
             </h2>
           </div>
           <div style={{ display: 'flex', gap: 2, flex: 'none' }}>

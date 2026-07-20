@@ -1,7 +1,6 @@
 const LINKS = [
   ['#quienes-somos', 'Quiénes Somos'],
-  ['#servicios', 'Servicios'],
-  ['#proyectos', 'Proyectos'],
+  ['#desarrollo', 'Servicios'],
   ['#contacto', 'Contacto'],
 ]
 
@@ -49,6 +48,17 @@ export default function Footer() {
 
       <div className="footer__bottom container">
         <p>© {new Date().getFullYear()} Volutus. Todos los derechos reservados.</p>
+      </div>
+
+      <div className="footer__wordmark" aria-hidden="true">
+        <video
+          className="footer__wordmark-video"
+          src="/videos/hero.mp4"
+          muted
+          loop
+          playsInline
+          preload="none"
+        />
       </div>
     </footer>
   )

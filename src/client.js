@@ -126,6 +126,29 @@ function initHeroVideo() {
   }
 }
 
+// El video del footer no trae autoplay ni preload: recién se pide y se
+// reproduce cuando está por entrar en pantalla (mismo archivo que el
+// hero, así que el navegador lo sirve de caché en vez de descargarlo de
+// nuevo).
+function initFooterVideo() {
+  const video = document.querySelector('.footer__wordmark-video')
+  if (!video) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          video.play()
+          observer.unobserve(video)
+        }
+      }
+    },
+    { threshold: 0.1 },
+  )
+  observer.observe(video)
+}
+
 // La rueda del mouse desplaza el carrousel en horizontal (igual que el
 // sitio de referencia) y también se puede arrastrar con el mouse.
 function initDevCarousel() {
@@ -409,6 +432,7 @@ export default function init() {
   initNavScroll()
   initNavToggle()
   initHeroVideo()
+  initFooterVideo()
   initDevCarousel()
   initReveal()
   initTabs()

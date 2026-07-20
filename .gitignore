@@ -4,3 +4,4 @@ dist
 .prerender
 *.local
 .DS_Store
+.playwright-mcp

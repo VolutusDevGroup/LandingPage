@@ -28,7 +28,7 @@ export default function Hero() {
           <a className="btn btn-primary" href="#contacto">
             Contáctanos
           </a>
-          <a className="btn btn-secondary" href="#proyectos">
+          <a className="btn btn-secondary" href="#desarrollo">
             Proyectos
           </a>
         </div>
