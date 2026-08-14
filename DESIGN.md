@@ -70,8 +70,6 @@ Definidos en `src/styles/index.css` y reutilizados en toda la landing:
   primario usa el acento con estados 600/700.
 - `.eyebrow` — etiqueta de sección en mayúsculas con barra de acento.
 - `.tag` — chip neutro para tecnologías.
-- `.input` / `.field` / `.field-error` — formularios con estados de
-  error accesibles (`aria-invalid`, `role="alert"`).
 - `.section-divider` — separador de secciones.
 - `.reveal` — aparición al hacer scroll (opacidad + translateY),
   activada por IntersectionObserver.

@@ -348,69 +348,201 @@ function initTabs() {
 }
 
 const CONTACT_EMAIL = 'dpenaylilloluhrs@gmail.com'
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const VALIDADORES = {
-  name: (v) =>
-    v.trim().length >= 2 || 'Escribe tu nombre (mínimo 2 caracteres).',
-  email: (v) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ||
-    'Ingresa un correo válido, por ejemplo nombre@empresa.com.',
-  message: (v) =>
-    v.trim().length >= 10 || 'Cuéntanos un poco más (mínimo 10 caracteres).',
-}
-
-function setError(input, mensaje) {
-  const id = `${input.id}-error`
-  const existente = document.getElementById(id)
-  if (!mensaje) {
-    input.setAttribute('aria-invalid', 'false')
-    input.removeAttribute('aria-describedby')
-    existente?.remove()
-    return
-  }
-  let error = existente
-  if (!error) {
-    error = document.createElement('p')
-    error.id = id
-    error.className = 'field-error'
-    error.setAttribute('role', 'alert')
-    input.after(error)
-  }
+function mostrarError(input, mensaje) {
+  input.classList.toggle('is-invalid', Boolean(mensaje))
+  const error = document.getElementById(`contact-hero-${input.name}-error`)
+  if (!error) return
   error.textContent = mensaje
-  input.setAttribute('aria-invalid', 'true')
-  input.setAttribute('aria-describedby', id)
+  error.hidden = !mensaje
 }
 
-// Sitio estático sin backend: el envío abre el cliente de correo
-// con el mensaje ya redactado.
-function initContacto() {
-  const form = document.querySelector('.contact__form')
-  if (!form) return
-  const status = form.querySelector('.contact__status')
+function mostrarErrorGrupo(grupo, mensaje) {
+  const error = document.getElementById(grupo.getAttribute('aria-describedby'))
+  if (!error) return
+  error.textContent = mensaje
+  error.hidden = !mensaje
+}
 
-  form.addEventListener('input', (evento) => setError(evento.target, ''))
+// Botones "pill": aria-pressed es el único estado (CSS lo pinta, ver
+// .ch-pill[aria-pressed] en ContactHero.css). En modo single, elegir uno
+// limpia al resto del grupo; en multi, cada botón se alterna solo.
+function initPillGroup(grupo) {
+  const modo = grupo.dataset.pillMode
+  const botones = [...grupo.querySelectorAll('.ch-pill')]
+  botones.forEach((boton) => {
+    boton.addEventListener('click', () => {
+      if (modo === 'single') {
+        botones.forEach((b) => b.setAttribute('aria-pressed', String(b === boton)))
+      } else {
+        boton.setAttribute(
+          'aria-pressed',
+          String(boton.getAttribute('aria-pressed') !== 'true'),
+        )
+      }
+      mostrarErrorGrupo(grupo, '')
+    })
+  })
+}
+
+function seleccionGrupo(grupo) {
+  return [...grupo.querySelectorAll('[aria-pressed="true"]')].map((boton) => ({
+    value: boton.dataset.value,
+    label: boton.textContent.trim(),
+  }))
+}
+
+// Sitio estático sin backend: el envío abre el cliente de correo con el
+// mensaje ya redactado y, si el usuario vuelve, muestra la confirmación
+// del diseño ("Mensaje recibido") en vez de dejar el formulario vacío.
+function initContactoForm(form) {
+  const status = form.querySelector('.contact-hero__status')
+  const success = form.parentElement.querySelector('.contact-hero__success')
+  const { name: nombre, email, message: mensaje, budget: presupuesto } = form.elements
+  const quienGrupo = form.querySelector('[data-pill-group="quien"]')
+  const necesidadesGrupo = form.querySelector('[data-pill-group="necesidades"]')
+  const estadoGrupo = form.querySelector('[data-pill-group="estado"]')
+
+  form.querySelectorAll('[data-pill-group]').forEach(initPillGroup)
+
+  const contador = form.querySelector('[data-role="counter"]')
+  if (contador) {
+    const max = mensaje.maxLength || 500
+    const actualizarContador = () => {
+      contador.textContent = `${max - mensaje.value.length} caracteres restantes`
+    }
+    mensaje.addEventListener('input', actualizarContador)
+    actualizarContador()
+  }
+
+  nombre.addEventListener('blur', () => {
+    mostrarError(nombre, nombre.value.trim() ? '' : 'Ingresa tu nombre.')
+  })
+  email.addEventListener('blur', () => {
+    mostrarError(email, EMAIL_RE.test(email.value.trim()) ? '' : 'Ingresa un email válido.')
+  })
 
   form.addEventListener('submit', (evento) => {
     evento.preventDefault()
     status.textContent = ''
 
-    let valido = true
-    for (const [nombre, validar] of Object.entries(VALIDADORES)) {
-      const resultado = validar(form.elements[nombre].value)
-      setError(form.elements[nombre], resultado === true ? '' : resultado)
-      if (resultado !== true) valido = false
-    }
-    if (!valido) return
+    const nombreError = nombre.value.trim() ? '' : 'Ingresa tu nombre.'
+    const emailError = EMAIL_RE.test(email.value.trim()) ? '' : 'Ingresa un email válido.'
+    const quienSeleccion = seleccionGrupo(quienGrupo)
+    const quienError = quienSeleccion.length ? '' : 'Selecciona una opción.'
 
-    const { name, email, message } = form.elements
-    const subject = encodeURIComponent(`Contacto desde la web — ${name.value}`)
+    mostrarError(nombre, nombreError)
+    mostrarError(email, emailError)
+    mostrarErrorGrupo(quienGrupo, quienError)
+    if (nombreError || emailError || quienError) return
+
+    const necesidadesSeleccion = seleccionGrupo(necesidadesGrupo)
+    const estadoSeleccion = seleccionGrupo(estadoGrupo)
+
+    const detalles = [
+      `¿Con quién hablamos?: ${quienSeleccion[0].label}`,
+      necesidadesSeleccion.length &&
+        `¿Qué necesita?: ${necesidadesSeleccion.map((n) => n.label).join(', ')}`,
+      estadoSeleccion.length && `Estado del proyecto: ${estadoSeleccion[0].label}`,
+      presupuesto.value && `Presupuesto: ${presupuesto.selectedOptions[0].textContent}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    const subject = encodeURIComponent(`Contacto desde la web — ${nombre.value}`)
     const body = encodeURIComponent(
-      `${message.value}\n\n— ${name.value} (${email.value})`,
+      `${mensaje.value}\n\n${detalles}\n\n— ${nombre.value} (${email.value})`,
     )
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`
-    status.textContent =
-      'Se abrió tu cliente de correo con el mensaje listo para enviar.'
+
+    form.hidden = true
+    if (success) success.hidden = false
   })
+}
+
+// Sección "Hablemos de tu proyecto": video de fondo según breakpoint (se
+// carga recién al entrar en viewport, igual que el video del footer) y
+// panel de contacto que se desliza desde abajo. El panel nace inert y solo
+// se activa al abrirlo, para que quede fuera del tab order mientras está
+// oculto.
+function initContactHero() {
+  const video = document.querySelector('.contact-hero__video')
+  const boton = document.querySelector('.contact-hero__cta')
+  const overlay = document.querySelector('.contact-hero__overlay')
+  const cerrar = document.querySelector('.contact-hero__close')
+  const form = document.querySelector('.contact-hero__form')
+  if (!video || !boton || !overlay || !cerrar || !form) return
+
+  const fuente = video.querySelector('source')
+  const esMobile = window.matchMedia('(max-width: 767px)')
+  const esTablet = window.matchMedia(
+    '(min-width: 768px) and (max-width: 1199px)',
+  )
+
+  function elegirFuente() {
+    if (esMobile.matches) return video.dataset.srcMobile
+    if (esTablet.matches) return video.dataset.srcTablet
+    return video.dataset.srcDesktop
+  }
+
+  function actualizarFuente() {
+    const src = elegirFuente()
+    if (fuente.getAttribute('src') === src) return
+    const reproduciendo = !video.paused
+    fuente.src = src
+    video.load()
+    if (reproduciendo) video.play()
+  }
+
+  actualizarFuente()
+  esMobile.addEventListener('change', actualizarFuente)
+  esTablet.addEventListener('change', actualizarFuente)
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            video.play()
+            observer.unobserve(video)
+          }
+        }
+      },
+      { threshold: 0.15 },
+    )
+    observer.observe(video)
+  }
+
+  overlay.inert = true
+
+  function alEscape(evento) {
+    if (evento.key === 'Escape') cerrarPanel()
+  }
+
+  function abrirPanel() {
+    overlay.classList.add('is-open')
+    overlay.inert = false
+    boton.setAttribute('aria-expanded', 'true')
+    cerrar.focus()
+    document.addEventListener('keydown', alEscape)
+  }
+
+  function cerrarPanel() {
+    overlay.classList.remove('is-open')
+    overlay.inert = true
+    boton.setAttribute('aria-expanded', 'false')
+    boton.focus()
+    document.removeEventListener('keydown', alEscape)
+  }
+
+  boton.addEventListener('click', abrirPanel)
+  cerrar.addEventListener('click', cerrarPanel)
+  overlay.addEventListener('click', (evento) => {
+    if (evento.target === overlay) cerrarPanel()
+  })
+
+  initContactoForm(form)
 }
 
 // Web Analytics de Vercel con el snippet oficial: sin el paquete
@@ -436,6 +568,6 @@ export default function init() {
   initDevCarousel()
   initReveal()
   initTabs()
-  initContacto()
+  initContactHero()
   if (import.meta.env.PROD) initAnalytics()
 }

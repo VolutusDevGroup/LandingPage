@@ -2,7 +2,7 @@ import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
 import About from './components/About.jsx'
 import ServicesCarousel from './components/ServicesCarousel.jsx'
-import Contact from './components/Contact.jsx'
+import ContactHero from './components/ContactHero.jsx'
 import Footer from './components/Footer.jsx'
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
         <Hero />
         <About />
         <ServicesCarousel />
-        <Contact />
+        <ContactHero />
       </main>
       <Footer />
     </>
