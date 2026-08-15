@@ -3,17 +3,18 @@
 // por ahora esos espacios muestran un placeholder con la descripción.
 export const DESARROLLO = [
   {
-    tipo: 'principal',
-    numero: '01',
-    titulo: 'Desarrollo de software',
-    subtitulo: 'Cubrimos todo el ciclo de tu producto.',
+    tipo: 'ejemplo',
+    mono: 'PN',
+    etiqueta: 'Proyecto activo',
+    titulo: 'PonleNota',
+    subtitulo: 'Plataforma NFC de reputación y fidelización para negocios locales.',
     puntos: [
-      'Arquitectura Full-Stack',
-      'Aplicaciones móviles nativas',
-      'Infraestructura Cloud escalable',
-      'Flujos de CI/CD automatizados',
-      'Integración avanzada de IA y LLMs',
+      'Tarjetas NFC que convierten cada visita en una reseña',
+      'Cupones digitales por reseña verificada',
+      'Dashboard con métricas por local',
     ],
+    tags: ['React', 'Supabase', 'PostgreSQL', 'Vercel'],
+    imagePlaceholder: 'Captura — plataforma PonleNota',
   },
   {
     tipo: 'video',
@@ -22,7 +23,7 @@ export const DESARROLLO = [
   },
   {
     tipo: 'principal',
-    numero: '02',
+    numero: '01',
     titulo: 'Integración avanzada de IA y LLMs',
     subtitulo: 'De prototipo a producción, con IA real.',
     puntos: [
@@ -52,7 +53,7 @@ export const DESARROLLO = [
   },
   {
     tipo: 'principal',
-    numero: '03',
+    numero: '02',
     titulo: 'Infraestructura Cloud escalable',
     subtitulo: 'Arquitectura que crece con el producto.',
     puntos: [
@@ -77,7 +78,7 @@ export const DESARROLLO = [
   },
   {
     tipo: 'principal',
-    numero: '04',
+    numero: '03',
     titulo: 'Flujos de CI/CD automatizados',
     subtitulo: 'Cada cambio, probado y desplegado solo.',
     puntos: [
@@ -101,7 +102,7 @@ export const DESARROLLO = [
   },
   {
     tipo: 'principal',
-    numero: '05',
+    numero: '04',
     titulo: 'Aplicaciones móviles nativas',
     subtitulo: 'Rendimiento nativo en iOS y Android.',
     puntos: [
@@ -125,7 +126,7 @@ export const DESARROLLO = [
   },
   {
     tipo: 'principal',
-    numero: '06',
+    numero: '05',
     titulo: 'Arquitectura Full-Stack',
     subtitulo: 'Un solo equipo, todo el stack.',
     puntos: [
