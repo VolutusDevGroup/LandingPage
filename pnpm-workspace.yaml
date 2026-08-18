@@ -1,3 +1,7 @@
+# Repositorio de un solo paquete: pnpm exige declarar `packages` si este archivo existe.
+packages:
+  - '.'
+
 # esbuild necesita su script postinstall para validar el binario nativo
-allowBuilds:
-  esbuild: true
+onlyBuiltDependencies:
+  - esbuild

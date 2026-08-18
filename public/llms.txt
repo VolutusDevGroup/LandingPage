@@ -6,14 +6,13 @@ Volutus es una landing page de una sola página. Todo el contenido está en espa
 Contacto: dpenaylilloluhrs@gmail.com
 
 
-TODO("Actualizar según links reales")
 ## Secciones
 
-- [Inicio](https://example.com/): propuesta de valor y presentación del estudio
-- [Quiénes Somos](https://example.com/#quienes-somos): misión, visión y filosofía de trabajo
-- [Servicios](https://example.com/#servicios): frontend, backend, infraestructura y automatización con IA
-- [Proyectos](https://example.com/#proyectos): sistemas reales en producción
-- [Contacto](https://example.com/#contacto): formulario y correo del equipo
+- [Inicio](https://volutus.cl/): propuesta de valor y presentación del estudio
+- [Quiénes Somos](https://volutus.cl/#quienes-somos): misión, visión y filosofía de trabajo
+- [Servicios](https://volutus.cl/#servicios): frontend, backend, infraestructura y automatización con IA
+- [Proyectos](https://volutus.cl/#proyectos): sistemas reales en producción
+- [Contacto](https://volutus.cl/#contacto): formulario y correo del equipo
 
 ## Servicios
 

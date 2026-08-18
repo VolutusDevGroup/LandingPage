@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# TODO: reemplazar por el dominio real al hacer deploy
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://volutus.cl/sitemap.xml
